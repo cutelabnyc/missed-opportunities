@@ -16,7 +16,7 @@ brew install platformio
 
 ## Development
 
-After creating a feature branch, you can build locally to make sure the code can compile with gcc
+After creating a feature branch, you can build locally without the module plugged in to make sure the code can compile
 
 ```
 pio run
@@ -28,6 +28,12 @@ Then plug the prototype board into your computer to unit test
 pio test
 ```
 
+Finally, upload the code with the optional `monitor` flag to view the output of any Serial monitors put in for debugging.
+
+```
+pio run --target upload --target monitor
+```
+
 After pull requesting, Travis CI will make sure that the code is able to compile and perform integration testing in order to make sure everything is squeaky clean before merging
 
 ## Notes
@@ -37,3 +43,4 @@ General To-Dos:
 - Make sure CI cycle is working
 - Structure a basic outline from diagram on new branch
 - Write unit tests and integration tests
+- Structure the main loop to integrate a debugging mode where the Serial monitor is turned on
