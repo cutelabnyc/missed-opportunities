@@ -1,5 +1,5 @@
 #
-# Template #1: General project. Test it using existing `platformio.ini`.
+# Performs CI tests upon pull request
 #
 
 language: python
