@@ -1,7 +1,7 @@
 #include "../include/init.h"
 
 // TODO: Rename these struct variables lol
-opportunity_t *op_cv = OP_init();
+opportunity_t *block = OP_init();
 
 void setup()
 {
@@ -14,9 +14,9 @@ void setup()
 
 void loop()
 {
-  Serial.println(analogRead(ANALOG_IN));
-  OP_read(op_cv, analogRead(ANALOG_IN));
-  digitalWrite(DIGITAL_OUT, op_cv->cv_out);
+  OP_read(block, analogRead(ANALOG_IN));
+  digitalWrite(DIGITAL_OUT, block->cv_out);
+  Serial.println(block->cv_out);
 }
 
 /**====================================*/
@@ -29,10 +29,24 @@ opportunity_t *OP_init(void)
   return self;
 }
 
-void OP_read(opportunity *opt, uint16_t cv_in)
+void OP_read(opportunity *self, uint16_t cv_in)
 {
-  if (cv_in > INPUT_THRESHOLD)
-    opt->cv_out = HIGH;
-  else
-    opt->cv_out = LOW;
+  // TODO: Next time, uncomment below and check
+  // if the alternation is good
+
+  // Flip gate for zero-crossing
+  //if (cv_in == 0)
+  //{
+  //  opt->isGated = !opt->isGated;
+  //}
+
+  // Detect zero crossing
+  //if (opt->isGated == false)
+  //{
+  self->cv_out = cv_in;
+  //}
+  //else
+  //{
+  //  opt->cv_out = 0;
+  //}
 }

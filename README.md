@@ -43,4 +43,5 @@ General To-Dos:
 - Make sure CI cycle is working
 - Structure a basic outline from diagram on new branch
 - Write unit tests and integration tests
+  1. Add a unit test for a full input range on the atmega's analogIn function (0-1023)
 - Structure the main loop to integrate a debugging mode where the Serial monitor is turned on

@@ -1,27 +1,19 @@
 #include <Arduino.h>
 
-#define ANALOG_IN A5
-#define DIGITAL_OUT 9
+#define ANALOG_IN A3   // ANALOG A5, A4, A3, A2
+#define DIGITAL_OUT 10 // DIGITAL 3, 9, 10, 11
 #define LED_PIN 13
-
-/**
-* NOTE: The input voltage should go through some sort of
-* calibration process where a number that's not arbitrary 
-* should be the real marker of threshold. 
-*/
-#define INPUT_THRESHOLD 300
 
 typedef struct opportunity
 {
     uint16_t cv_in;
-    // NOTE: Currently CV only oscillates between
-    // HIGH and LOW digital output values. It might be
-    // better to also use voltage values for the output
-    bool cv_out;
+    uint16_t cv_out;
+
+    bool isGated;
 } opportunity_t;
 
 opportunity *OP_init(void);
 void *OP_free(void);
 
-void OP_read(opportunity *opt, uint16_t cv_in);
-void OP_process(opportunity *opt);
+void OP_read(opportunity *self, uint16_t cv_in);
+void OP_process(opportunity *self);
