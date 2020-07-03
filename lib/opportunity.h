@@ -12,8 +12,8 @@ typedef struct opportunity
     bool isGated;
 } opportunity_t;
 
-opportunity *OP_init(void);
+opportunity_t *OP_init(void);
 void *OP_free(void);
 
-void OP_read(opportunity *self, uint16_t cv_in);
-void OP_process(opportunity *self);
+void OP_read(opportunity_t *self, uint16_t cv_in);
+void OP_process(opportunity_t *self);
