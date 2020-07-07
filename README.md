@@ -16,19 +16,24 @@ brew install platformio
 
 ## Development
 
-After creating a feature branch, you can build locally without the module plugged in to make sure the code can compile
+After creating a feature branch and making your changes, you can build locally without the board plugged in to make sure the code can compile. There are two building environments specified in `platform.ini`:
+
+- `[env:uno]` is the default environment, for building, uploading, and CI testing
+- `[env:native]` is for onboard unit testing
+
+To perform CI testing and building without the board plugged in you can simply run
 
 ```
-pio run
+pio test && pio run
 ```
 
-Then plug the prototype board into your computer to unit test
+Then plug the prototype board into your computer to perform unit tests
 
 ```
-pio test
+pio test -e native
 ```
 
-Finally, upload the code with the optional `monitor` flag to view the output of any Serial monitors put in for debugging.
+Finally, upload the code with the optional `monitor` flag to view the output of any Serial printing put in the code for debugging.
 
 ```
 pio run --target upload --target monitor
