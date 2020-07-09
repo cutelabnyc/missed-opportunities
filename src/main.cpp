@@ -6,20 +6,19 @@ extern "C"
 #include "opportunity.h"
 }
 
-// TODO: Rename these struct variables lol
-opportunity_t *block = OP_init();
+opportunity_t *block;
 
 void setup()
 {
-  pinMode(ANALOG_IN, INPUT);
-  pinMode(DIGITAL_OUT, OUTPUT);
-  pinMode(LED_PIN, OUTPUT);
+  OP_setPins();
+  block = OP_init();
 
   Serial.begin(9600);
 }
 
 void loop()
 {
-  OP_read(block, analogRead(ANALOG_IN));
-  digitalWrite(DIGITAL_OUT, block->cv_out);
+  OP_read(block);
+  OP_process(block);
+  OP_write(block);
 }
