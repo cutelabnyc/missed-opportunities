@@ -28,9 +28,12 @@ typedef struct opportunity
     bool _open;
     uint8_t _skipSize;
     uint8_t _count;
-    uint16_t _lastSample;
+    uint16_t _lastOutput;
     uint16_t _maxVoltage;
     uint16_t _crossVoltage; // should be maxVoltage / 2
+    uint16_t _hysteresis;
+    uint16_t _downThreshold;
+    uint16_t _upThreshold;
 } opportunity_t;
 
 /*==========================================*/
@@ -40,7 +43,7 @@ typedef struct opportunity
  * 
  * TODO: Add and describe parameters
  */
-void OP_init(opportunity_t *op, uint8_t skipSize, uint16_t vmax);
+void OP_init(opportunity_t *op, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis);
 
 /**
  * Tear down resources associated with 'opportunity' struct
@@ -62,6 +65,13 @@ void OP_set_skip_size(opportunity_t *op, uint8_t skipSize);
  * TODO: Add and describe parameters
  */
 void OP_set_max_voltage(opportunity_t *op, uint16_t vmax);
+
+/**
+ * Set the hysteresis as an unsigned integer
+ * 
+ * TODO: Add and describe parameters
+ */
+void OP_set_hysteresis(opportunity_t *op, uint16_t hysteresis);
 
 /**
  * Process audio
