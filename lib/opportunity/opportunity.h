@@ -7,9 +7,15 @@
  * CV processing in the main loop.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#ifndef OPPORTUNITY_H
+#define OPPORTUNITY_H
+
+#include <stdint.h>
 #include <stdbool.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * opportunity_t:
@@ -19,52 +25,53 @@
  */
 typedef struct opportunity
 {
-    uint16_t cv_in;
-    uint16_t cv_out;
+    bool _open;
+    uint8_t _skipSize;
+    uint8_t _count;
+    uint16_t _lastSample;
+    uint16_t _maxVoltage;
+    uint16_t _crossVoltage; // should be maxVoltage / 2
 } opportunity_t;
 
 /*==========================================*/
 
 /**
- * opportunity_t* OP_init(void)
+ * Initialize the 'opportunity' struct
  * 
  * TODO: Add and describe parameters
  */
-opportunity_t *OP_init(void);
+void OP_init(opportunity_t *op, uint8_t skipSize, uint16_t vmax);
 
 /**
- * void *OP_free(void);
+ * Tear down resources associated with 'opportunity' struct
  * 
  * TODO: Add and describe parameters
  */
-void *OP_free(void);
+void OP_destroy(opportunity_t *op);
 
 /**
- * void OP_setPins();
+ * Set the skip size
  * 
  * TODO: Add and describe parameters
  */
-void OP_setPins();
-
-/*==========================================*/
+void OP_set_skip_size(opportunity_t *op, uint8_t skipSize);
 
 /**
- * void OP_read(opportunity_t *self);
+ * Set the maximum voltage
  * 
  * TODO: Add and describe parameters
  */
-void OP_read(opportunity_t *self);
+void OP_set_max_voltage(opportunity_t *op, uint16_t vmax);
 
 /**
- * void OP_process(opportunity_t *self);
+ * Process audio
  * 
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *self);
+void OP_process(opportunity_t *op, uint16_t *in, uint16_t *out);
 
-/**
- * void OP_write(opportunity_t *self);
- * 
- * TODO: Add and describe parameters
- */
-void OP_write(opportunity_t *self);
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* OPPORTUNITY_H */

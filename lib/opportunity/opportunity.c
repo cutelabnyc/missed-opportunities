@@ -1,40 +1,71 @@
 #include <opportunity.h>
-#include <Arduino.h>
 
-#define ANALOG_IN A3   // ANALOG A5, A4, A3, A2
-#define DIGITAL_OUT 10 // DIGITAL 3, 9, 10, 11
-#define LED_PIN 13
-
-opportunity_t *OP_init(void)
+void OP_init(opportunity_t *op, uint8_t skipSize, uint16_t vmax)
 {
-    // TODO: Eventually this will malloc()
-    // additional memory?
-    opportunity_t *self = malloc(sizeof(void));
+    op->_skipSize = skipSize;
+    op->_open = true;
+    op->_count = op->_skipSize - 1;
+    op->_maxVoltage = vmax;
+    op->_crossVoltage = ((vmax + 1) / 2) - 1;
+    op->_lastSample = op->_crossVoltage;
 
-    self->cv_in = 0;
-    self->cv_out = 0;
-
-    return self;
 }
 
-void OP_setPins()
+/**
+ * Tear down resources associated with 'opportunity' struct
+ * 
+ * TODO: Add and describe parameters
+ */
+void OP_destroy(opportunity_t *op)
 {
-    pinMode(ANALOG_IN, INPUT);
-    pinMode(DIGITAL_OUT, OUTPUT);
-    pinMode(LED_PIN, OUTPUT);
+    // nothing to do
 }
 
-void OP_read(opportunity_t *self)
+/**
+ * Set the skip size
+ * 
+ * TODO: Add and describe parameters
+ */
+void OP_set_skip_size(opportunity_t *op, uint8_t skipSize)
 {
-    self->cv_in = analogRead(ANALOG_IN);
+    op->_skipSize = skipSize;
 }
 
-void OP_process(opportunity_t *self)
+/**
+ * Set the maximum voltage
+ * 
+ * TODO: Add and describe parameters
+ */
+void OP_set_max_voltage(opportunity_t *op, uint16_t vmax)
 {
-    self->cv_out = self->cv_in;
+    op->_maxVoltage = vmax;
+    op->_crossVoltage = ((vmax + 1) / 2) - 1;
 }
 
-void OP_write(opportunity_t *self)
+/**
+ * void OP_process(opportunity_t *self);
+ * 
+ * TODO: Add and describe parameters
+ */
+void OP_process(opportunity_t *op, uint16_t *in, uint16_t *out)
 {
-    digitalWrite(DIGITAL_OUT, self->cv_out);
+    // First check if you've got a zero crossing
+    uint16_t thisSample = *in;
+    if (op->_lastSample <= op->_crossVoltage && thisSample > op->_crossVoltage) {
+        op->_count++;
+
+        // Close the op when you've counted enough zero crossings
+        if (op->_count >= op->_skipSize) {
+            op->_open = false;
+            op->_count = 0;
+        } else {
+            op->_open = true;
+        }
+    }
+
+    // Set the last sample
+    op->_lastSample = thisSample;
+
+    // Write the output
+    *out = op->_open ? thisSample : 0;
 }
