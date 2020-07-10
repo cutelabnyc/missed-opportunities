@@ -13,9 +13,6 @@ opportunity_t *OP_init(void)
 
     self->cv_in = 0;
     self->cv_out = 0;
-    self->isGated = false;
-
-    self->zeroCrossing = false;
 
     return self;
 }
@@ -29,7 +26,6 @@ void OP_setPins()
 
 void OP_read(opportunity_t *self)
 {
-    // Sets input CV value to struct varibale
     self->cv_in = analogRead(ANALOG_IN);
 }
 
