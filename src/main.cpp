@@ -17,14 +17,12 @@ extern "C"
 #include "opportunity.h"
 }
 
-/**
- * opportunity_t* block: [/lib/opportunity/opportunity.h]
- * 
- * Highest abstraction of the module's functionality.
- * Includes all parameters from IO channel to probability
- * chain
- */
-opportunity_t *block;
+opportunity_t op;
+
+int analogPin = A3;
+int outputPin = 10;
+uint16_t val = 0;
+uint16_t output;
 
 /**
  * void setup(): 
@@ -38,8 +36,9 @@ opportunity_t *block;
  */
 void setup()
 {
-  OP_setPins();
-  block = OP_init();
+  OP_init(&op, 2, 1023, 3);
+
+  pinMode(outputPin, OUTPUT);
 
   Serial.begin(9600);
 }
@@ -56,7 +55,7 @@ void setup()
  */
 void loop()
 {
-  OP_read(block);
-  OP_process(block);
-  OP_write(block);
+  val = analogRead(analogPin);
+  OP_process(&op, &val, &output);
+  digitalWrite(outputPin, val <= 511 ? LOW : HIGH);
 }
