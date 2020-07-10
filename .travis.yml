@@ -1,7 +1,6 @@
 #
 # Performs CI tests upon pull request
 #
-
 language: python
 python:
   - "2.7"
@@ -15,14 +14,5 @@ install:
   - pip install -U platformio
   - platformio update
 
-  jobs:
-    include:
-      - stage: test
-        name: "CI test"
-        script: platformio test
-      
-      - stage: build
-        name: "CI build"
-        script: platformio run
-        
-
+script:
+  - platformio test
