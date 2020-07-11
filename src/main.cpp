@@ -17,10 +17,16 @@ extern "C"
 #include "opportunity.h"
 }
 
-opportunity_t op;
+opportunity_t op[4];
 
-int analogPin = A3;
-int outputPin = 10;
+int analogPins[4] = {
+  A2, A3, A4, A5
+};
+
+int outputPins[4] = {
+  2, 3, 4, 5
+};
+
 uint16_t val = 0;
 uint16_t output;
 
@@ -36,9 +42,11 @@ uint16_t output;
  */
 void setup()
 {
-  OP_init(&op, 2, 1023, 3);
+  for (int i = 0; i < 4; i++) {
+    OP_init(op + i, 2, 1023, 3);
+    pinMode(outputPins[i], OUTPUT);
+  }
 
-  pinMode(outputPin, OUTPUT);
 
   Serial.begin(9600);
 }
@@ -55,7 +63,15 @@ void setup()
  */
 void loop()
 {
-  val = analogRead(analogPin);
-  OP_process(&op, &val, &output);
-  digitalWrite(outputPin, val <= 511 ? LOW : HIGH);
+  for (int i = 0; i < 4; i++) {
+    val = analogRead(analogPins[i]);
+    // Serial.print("input: ");
+    // Serial.println(val, DEC);
+    OP_process(op + i, &val, &output);
+    // Serial.print("proc: ");
+    // Serial.println(output, DEC);
+    digitalWrite(outputPins[i], output <= 511 ? LOW : HIGH);
+    // Serial.print("out");
+    // Serial.println(output <= 511 ? LOW : HIGH, DEC);
+  }
 }
