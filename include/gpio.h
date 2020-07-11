@@ -23,12 +23,11 @@ typedef struct GPIO
 /**
  * Returns the global pin IO struct
  */
-
-GPIO_t *GPIO_init(void)
+GPIO_t GPIO_init(void)
 {
     GPIO_t self = {
-        {A5, A4, A3, A2}, // Analog Ins
-        {3, 9, 10, 11},   // Digital Outs
+        {A2, A3, A4, A5}, // Analog Ins
+        {2, 3, 4, 5},     // Digital Outs
         {13, 0, 0, 0}     // LED Outs
     };
 
@@ -39,5 +38,29 @@ GPIO_t *GPIO_init(void)
         pinMode(self.LED[i], OUTPUT);
     }
 
-    return &self;
+    return self;
+}
+
+/**
+ * Reads incoming data from all inputs
+ */
+uint16_t GPIO_read(GPIO_t *self)
+{
+    uint16_t values[NUM_CHANNELS];
+    for (int i = 0; i < NUM_CHANNELS; i++)
+    {
+        values[i] = analogRead(self->IN[i]);
+    }
+    return *values;
+}
+
+/**
+ * Writes data to all outputs
+ */
+void GPIO_write(GPIO_t *self, uint16_t *values)
+{
+    for (int i = 0; i < NUM_CHANNELS; i++)
+    {
+        digitalWrite(self->OUT[i], values[i]);
+    }
 }

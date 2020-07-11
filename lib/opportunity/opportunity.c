@@ -1,4 +1,5 @@
 #include <opportunity.h>
+#include <Arduino.h>
 
 void OP_init(opportunity_t *op, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
 {
@@ -69,27 +70,37 @@ void OP_process(opportunity_t *op, uint16_t *in, uint16_t *out)
     uint16_t thisSample = *in;
 
     // Currently above threshold
-    if (op->_lastOutput) {
+    if (op->_lastOutput)
+    {
         op->_lastOutput = thisSample <= op->_downThreshold ? 0 : op->_maxVoltage;
     }
-    
+
     // Currently below threshold
-    else {
-        if (thisSample > op->_upThreshold) {
+    else
+    {
+        if (thisSample > op->_upThreshold)
+        {
             op->_lastOutput = op->_maxVoltage;
 
             // Increment the count for a 0->1 transition
             op->_count++;
 
             // Close the op when you've counted enough zero crossings
-            if (op->_count >= op->_skipSize) {
+            if (op->_count >= op->_skipSize)
+            {
                 op->_open = false;
                 op->_count = 0;
-            } else {
+            }
+            else
+            {
                 op->_open = true;
             }
         }
     }
+
+    // Moved this from main.cpp, I feel like it should
+    // be in the process function
+    *out <= 511 ? LOW : HIGH;
 
     // Write the output
     *out = op->_open ? thisSample : 0;

@@ -11,6 +11,7 @@ includes a single pointer-to-struct [opportunity_t* block]
  */
 
 #include <Arduino.h>
+#include "gpio.h"
 
 extern "C"
 {
@@ -18,16 +19,9 @@ extern "C"
 }
 
 opportunity_t op[4];
+GPIO_t GPIO;
 
-int analogPins[4] = {
-  A2, A3, A4, A5
-};
-
-int outputPins[4] = {
-  2, 3, 4, 5
-};
-
-uint16_t val = 0;
+uint16_t val[NUM_CHANNELS];
 uint16_t output;
 
 /**
@@ -42,11 +36,11 @@ uint16_t output;
  */
 void setup()
 {
-  for (int i = 0; i < 4; i++) {
+  GPIO = GPIO_init();
+  for (int i = 0; i < 4; i++)
+  {
     OP_init(op + i, 2, 1023, 3);
-    pinMode(outputPins[i], OUTPUT);
   }
-
 
   Serial.begin(9600);
 }
@@ -63,15 +57,18 @@ void setup()
  */
 void loop()
 {
-  for (int i = 0; i < 4; i++) {
-    val = analogRead(analogPins[i]);
+  *val = GPIO_read(&GPIO);
+
+  for (int i = 0; i < NUM_CHANNELS; i++)
+  {
+    //val = analogRead(analogPins[i]);
     // Serial.print("input: ");
     // Serial.println(val, DEC);
-    OP_process(op + i, &val, &output);
+    OP_process(op + i, &val[i], &output);
     // Serial.print("proc: ");
     // Serial.println(output, DEC);
-    digitalWrite(outputPins[i], output <= 511 ? LOW : HIGH);
     // Serial.print("out");
     // Serial.println(output <= 511 ? LOW : HIGH, DEC);
   }
+  GPIO_write(&GPIO, val);
 }
