@@ -15,4 +15,4 @@ install:
   - platformio update
 
 script:
-  - platformio test
+  - platformio build # Should be platformio test

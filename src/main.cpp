@@ -22,7 +22,7 @@ opportunity_t op[4];
 GPIO_t GPIO;
 
 uint16_t val[NUM_CHANNELS];
-uint16_t output;
+uint16_t output[NUM_CHANNELS];
 
 /**
  * void setup(): 
@@ -64,11 +64,11 @@ void loop()
     //val = analogRead(analogPins[i]);
     // Serial.print("input: ");
     // Serial.println(val, DEC);
-    OP_process(op + i, &val[i], &output);
+    OP_process(op + i, &val[i], &output[i]);
     // Serial.print("proc: ");
     // Serial.println(output, DEC);
     // Serial.print("out");
     // Serial.println(output <= 511 ? LOW : HIGH, DEC);
   }
-  GPIO_write(&GPIO, val);
+  GPIO_write(&GPIO, output);
 }

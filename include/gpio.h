@@ -57,10 +57,10 @@ uint16_t GPIO_read(GPIO_t *self)
 /**
  * Writes data to all outputs
  */
-void GPIO_write(GPIO_t *self, uint16_t *values)
+void GPIO_write(GPIO_t *self, uint16_t *out)
 {
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
-        digitalWrite(self->OUT[i], values[i]);
+        digitalWrite(self->OUT[i], out[i]);
     }
 }

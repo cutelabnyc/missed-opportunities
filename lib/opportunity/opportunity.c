@@ -98,10 +98,10 @@ void OP_process(opportunity_t *op, uint16_t *in, uint16_t *out)
         }
     }
 
-    // Moved this from main.cpp, I feel like it should
-    // be in the process function
-    *out <= 511 ? LOW : HIGH;
-
     // Write the output
     *out = op->_open ? thisSample : 0;
+
+    // Moved this from main.cpp, I feel like it should
+    // be in the process function
+    *out = (*out <= 511 ? LOW : HIGH);
 }
