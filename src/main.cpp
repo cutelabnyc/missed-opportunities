@@ -38,7 +38,7 @@ void setup()
   GPIO = GPIO_init();
   for (int i = 0; i < 4; i++)
   {
-    OP_init(op + i, 2, 1023, 3);
+    OP_init(op + i, SKIP_SIZE, V_MAX, HYSTERESIS);
   }
 
   Serial.begin(9600);
