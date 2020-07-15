@@ -13,10 +13,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /**
  * opportunity_t:
  * 
@@ -79,9 +75,5 @@ void OP_set_hysteresis(opportunity_t *op, uint16_t hysteresis);
  * TODO: Add and describe parameters
  */
 void OP_process(opportunity_t *op, uint16_t *in, uint16_t *out);
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* OPPORTUNITY_H */
