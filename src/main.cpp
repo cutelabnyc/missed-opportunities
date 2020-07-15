@@ -10,7 +10,6 @@ includes a single pointer-to-struct [opportunity_t* block]
  * that was needed
  */
 
-#include <Arduino.h>
 #include "gpio.h"
 
 extern "C"
@@ -57,14 +56,14 @@ void setup()
  */
 void loop()
 {
-  *val = GPIO_read(&GPIO);
+  GPIO_read(&GPIO, val);
 
   for (int i = 0; i < NUM_CHANNELS; i++)
   {
     //val = analogRead(analogPins[i]);
     // Serial.print("input: ");
     // Serial.println(val, DEC);
-    OP_process(op + i, &val[i], &output[i]);
+    OP_process(&op[i], &val[i], &output[i]);
     // Serial.print("proc: ");
     // Serial.println(output, DEC);
     // Serial.print("out");

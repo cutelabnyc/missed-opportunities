@@ -15,4 +15,5 @@ install:
   - platformio update
 
 script:
-  - platformio build # Should be platformio test
+  pio test -e native; # Should be platformio test
+  pio run

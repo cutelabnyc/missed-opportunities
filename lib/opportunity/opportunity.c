@@ -1,5 +1,4 @@
 #include <opportunity.h>
-#include <Arduino.h>
 
 void OP_init(opportunity_t *op, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
 {
@@ -101,7 +100,7 @@ void OP_process(opportunity_t *op, uint16_t *in, uint16_t *out)
     // Write the output
     *out = op->_open ? thisSample : 0;
 
-    // Moved this from main.cpp, I feel like it should
-    // be in the process function
-    *out = (*out <= 511 ? LOW : HIGH);
+    // Check threshold
+    if (*out <= 511)
+        *out = 0;
 }
