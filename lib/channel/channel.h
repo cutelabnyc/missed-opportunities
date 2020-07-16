@@ -1,25 +1,25 @@
 /**
- * opportunity.h —— (Max Ardito, 07/09/20)
+ * channel.h —— (Max Ardito, 07/09/20)
  * 
- * Class representing the entire Missed Opportunity 
+ * Class representing the entire Missed channel 
  * module's functionality. Instantiated globally in 
  * [/src/main.cpp], initialized, and then used for 
  * CV processing in the main loop.
  */
 
-#ifndef OPPORTUNITY_H
-#define OPPORTUNITY_H
+#ifndef channel_H
+#define channel_H
 
 #include <stdint.h>
 #include <stdbool.h>
 
 /**
- * opportunity_t:
+ * channel_t:
  * 
  * Main struct for the module. 
  * TODO: Add and describe parameters
  */
-typedef struct opportunity
+typedef struct channel
 {
     bool _open;
     uint8_t _skipSize;
@@ -30,50 +30,50 @@ typedef struct opportunity
     uint16_t _hysteresis;
     uint16_t _downThreshold;
     uint16_t _upThreshold;
-} opportunity_t;
+} channel_t;
 
 /*==========================================*/
 
 /**
- * Initialize the 'opportunity' struct
+ * Initialize the 'channel' struct
  * 
  * TODO: Add and describe parameters
  */
-void OP_init(opportunity_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis);
+void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis);
 
 /**
- * Tear down resources associated with 'opportunity' struct
+ * Tear down resources associated with 'channel' struct
  * 
  * TODO: Add and describe parameters
  */
-void OP_destroy(opportunity_t *self);
+void CH_destroy(channel_t *self);
 
 /**
  * Set the skip size
  * 
  * TODO: Add and describe parameters
  */
-void OP_set_skip_size(opportunity_t *self, uint8_t skipSize);
+void CH_set_skip_size(channel_t *self, uint8_t skipSize);
 
 /**
  * Set the maximum voltage
  * 
  * TODO: Add and describe parameters
  */
-void OP_set_max_voltage(opportunity_t *self, uint16_t vmax);
+void CH_set_max_voltage(channel_t *self, uint16_t vmax);
 
 /**
  * Set the hysteresis as an unsigned integer
  * 
  * TODO: Add and describe parameters
  */
-void OP_set_hysteresis(opportunity_t *self, uint16_t hysteresis);
+void CH_set_hysteresis(channel_t *self, uint16_t hysteresis);
 
 /**
  * Process audio
  * 
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *self, uint16_t *in, uint16_t *out);
+void CH_process(channel_t *self, uint16_t *in, uint16_t *out);
 
-#endif /* OPPORTUNITY_H */
+#endif /* channel_H */

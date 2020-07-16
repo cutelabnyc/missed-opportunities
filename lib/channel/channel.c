@@ -1,6 +1,6 @@
-#include <opportunity.h>
+#include <channel.h>
 
-void OP_init(opportunity_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
+void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
 {
     self->_skipSize = skipSize;
     self->_open = true;
@@ -14,11 +14,11 @@ void OP_init(opportunity_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hyst
 }
 
 /**
- * Tear down resources associated with 'opportunity' struct
+ * Tear down resources associated with 'channel' struct
  * 
  * TODO: Add and describe parameters
  */
-void OP_destroy(opportunity_t *self)
+void CH_destroy(channel_t *self)
 {
     // nothing to do
 }
@@ -28,7 +28,7 @@ void OP_destroy(opportunity_t *self)
  * 
  * TODO: Add and describe parameters
  */
-void OP_set_skip_size(opportunity_t *self, uint8_t skipSize)
+void CH_set_skip_size(channel_t *self, uint8_t skipSize)
 {
     self->_skipSize = skipSize;
 }
@@ -38,7 +38,7 @@ void OP_set_skip_size(opportunity_t *self, uint8_t skipSize)
  * 
  * TODO: Add and describe parameters
  */
-void OP_set_max_voltage(opportunity_t *self, uint16_t vmax)
+void CH_set_max_voltage(channel_t *self, uint16_t vmax)
 {
     self->_maxVoltage = vmax;
     self->_crossVoltage = ((vmax + 1) / 2) - 1;
@@ -51,7 +51,7 @@ void OP_set_max_voltage(opportunity_t *self, uint16_t vmax)
  * 
  * TODO: Add and describe parameters
  */
-void OP_set_hysteresis(opportunity_t *self, uint16_t hysteresis)
+void CH_set_hysteresis(channel_t *self, uint16_t hysteresis)
 {
     self->_hysteresis = hysteresis;
     self->_downThreshold = self->_crossVoltage - self->_hysteresis;
@@ -59,11 +59,11 @@ void OP_set_hysteresis(opportunity_t *self, uint16_t hysteresis)
 }
 
 /**
- * void OP_process(opportunity_t *self);
+ * void CH_process(channel_t *self);
  * 
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *self, uint16_t *in, uint16_t *out)
+void CH_process(channel_t *self, uint16_t *in, uint16_t *out)
 {
     // First check if you've got a zero crossing
     uint16_t thisSample = *in;
