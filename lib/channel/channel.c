@@ -1,20 +1,22 @@
 #include <channel.h>
 
+/**
+ * void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
+ * 
+ * TODO: Add and describe parameters
+ */
 void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
 {
-    self->_skipSize = skipSize;
     self->_open = true;
-    self->_count = self->_skipSize - 1;
-    self->_maxVoltage = vmax;
+    self->_count = skipSize - 1;
     self->_crossVoltage = ((vmax + 1) / 2) - 1;
     self->_lastOutput = 0;
-    self->_hysteresis = hysteresis;
-    self->_downThreshold = self->_crossVoltage - self->_hysteresis;
-    self->_upThreshold = self->_crossVoltage + self->_hysteresis;
+    self->_downThreshold = self->_crossVoltage - hysteresis;
+    self->_upThreshold = self->_crossVoltage + hysteresis;
 }
 
 /**
- * Tear down resources associated with 'channel' struct
+ * void CH_destroy(channel_t *self)
  * 
  * TODO: Add and describe parameters
  */
@@ -24,46 +26,21 @@ void CH_destroy(channel_t *self)
 }
 
 /**
- * Set the skip size
+ * void CH_process(channel_t *self,
+ *                 uint16_t *in,
+ *                 uint16_t *out,
+ *                 uint8_t skip_size,
+ *                 uint16_t v_max,
+ *                 uint8_t hysteresis)
  * 
  * TODO: Add and describe parameters
  */
-void CH_set_skip_size(channel_t *self, uint8_t skipSize)
-{
-    self->_skipSize = skipSize;
-}
-
-/**
- * Set the maximum voltage
- * 
- * TODO: Add and describe parameters
- */
-void CH_set_max_voltage(channel_t *self, uint16_t vmax)
-{
-    self->_maxVoltage = vmax;
-    self->_crossVoltage = ((vmax + 1) / 2) - 1;
-    self->_downThreshold = self->_crossVoltage - self->_hysteresis;
-    self->_upThreshold = self->_crossVoltage - self->_hysteresis;
-}
-
-/**
- * Set the hysteresis as an unsigned integer
- * 
- * TODO: Add and describe parameters
- */
-void CH_set_hysteresis(channel_t *self, uint16_t hysteresis)
-{
-    self->_hysteresis = hysteresis;
-    self->_downThreshold = self->_crossVoltage - self->_hysteresis;
-    self->_upThreshold = self->_crossVoltage - self->_hysteresis;
-}
-
-/**
- * void CH_process(channel_t *self);
- * 
- * TODO: Add and describe parameters
- */
-void CH_process(channel_t *self, uint16_t *in, uint16_t *out)
+void CH_process(channel_t *self,
+                uint16_t *in,
+                uint16_t *out,
+                uint8_t skip_size,
+                uint16_t v_max,
+                uint8_t hysteresis)
 {
     // First check if you've got a zero crossing
     uint16_t thisSample = *in;
@@ -71,7 +48,7 @@ void CH_process(channel_t *self, uint16_t *in, uint16_t *out)
     // Currently above threshold
     if (self->_lastOutput)
     {
-        self->_lastOutput = thisSample <= self->_downThreshold ? 0 : self->_maxVoltage;
+        self->_lastOutput = thisSample <= self->_downThreshold ? 0 : v_max;
     }
 
     // Currently below threshold
@@ -79,13 +56,13 @@ void CH_process(channel_t *self, uint16_t *in, uint16_t *out)
     {
         if (thisSample > self->_upThreshold)
         {
-            self->_lastOutput = self->_maxVoltage;
+            self->_lastOutput = v_max;
 
             // Increment the count for a 0->1 transition
             self->_count++;
 
             // Close the self when you've counted enough zero crossings
-            if (self->_count >= self->_skipSize)
+            if (self->_count >= skip_size)
             {
                 self->_open = false;
                 self->_count = 0;

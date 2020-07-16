@@ -1,9 +1,10 @@
 /**
  * main.cpp —— (Max Ardito, 07/09/20)
  * 
- * Main functional loop for the Missed Opportunities module, 
- * includes a single pointer-to-struct [channel_t* block]
- * and the Arduino framework's setup() and loop() functions
+ * Main functional loop for the Missed Opportunities module. It's the
+ * place where the hardware [GPIO_t] and the code API [/lib/] go on 
+ * expensive and indulgent, yet rewarding dinner dates, noshing on
+ * the signals served by [buffer_t CV_in/CV_out].
  * 
  * NOTE: Might be worth eventually including a debugging argument
  * for use of the Serial monitor, if QA situations ever arose where
@@ -20,8 +21,8 @@ extern "C"
 opportunity_t opportunity;
 GPIO_t GPIO;
 
-uint16_t val[NUM_CHANNELS];
-uint16_t output[NUM_CHANNELS];
+buffer_t CV_in[NUM_CHANNELS];
+buffer_t CV_out[NUM_CHANNELS];
 
 /**
  * void setup(): 
@@ -29,17 +30,16 @@ uint16_t output[NUM_CHANNELS];
  * Initializes the ATMEGA328's pins, initializes
  * the channel_t* struct's variables, starts off the Serial
  * monitor for possible debugging
- * 
- * NOTE: The Serial monitor maybe should be turned off once board 
- * is in production?
  */
 void setup()
 {
   GPIO = GPIO_init();
-  for (int i = 0; i < NUM_CHANNELS; i++)
-  {
-    CH_init(opportunity.channel + i, SKIP_SIZE, V_MAX, HYSTERESIS);
-  }
+
+  OP_init(&opportunity,
+          NUM_CHANNELS,
+          SKIP_SIZE,
+          V_MAX,
+          HYSTERESIS);
 
   Serial.begin(9600);
 }
@@ -49,25 +49,16 @@ void setup()
  * 
  * The three step process of the loop consists of reading CV values 
  * passed through the four channels of module by the ATMEGA328's
- * ADC [CH_read()], finding zero crossings and gating certain
- * crossings based on markov probabilities [CH_process()], and
+ * ADC [GPIO_read()], finding zero crossings and gating certain
+ * crossings based on markov probabilities [OP_process()], and
  * finally writing the values to the four outputs on the module
- * [CH_write()]. 
+ * [GPIO_write()]. 
  */
 void loop()
 {
-  GPIO_read(&GPIO, val);
+  GPIO_read(&GPIO, CV_in);
 
-  for (int i = 0; i < NUM_CHANNELS; i++)
-  {
-    //val = analogRead(analogPins[i]);
-    // Serial.print("input: ");
-    // Serial.println(val, DEC);
-    CH_process(&opportunity.channel[i], &val[i], &output[i]);
-    // Serial.print("proc: ");
-    // Serial.println(output, DEC);
-    // Serial.print("out");
-    // Serial.println(output <= 511 ? LOW : HIGH, DEC);
-  }
-  GPIO_write(&GPIO, output);
+  OP_process(&opportunity, CV_in, CV_out);
+
+  GPIO_write(&GPIO, CV_out);
 }
