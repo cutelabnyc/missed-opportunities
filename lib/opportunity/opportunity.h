@@ -1,16 +1,56 @@
+/**
+ * opportunity.h —— (Max Ardito, 07/09/20)
+ * 
+ * Class representing the entire module's 
+ * functionality. Instantiated globally in 
+ * [/src/main.cpp], initialized, and then used 
+ * for CV processing in the main loop.
+ */
+
+#ifndef OPPORTUNITY_H
+#define OPPORTUNITY_H
+
 #include <channel.h>
 
+/**
+ * opportunity_t: Module's main data structure
+ * 
+ * TODO: Add and describe parameters
+ */
 typedef struct opportunity
 {
-    channel_t *channel; // TODO: Should be a pointer, init num channels
+    channel_t *channel; // Each individual I/O channel
 
     uint8_t num_channels;
+    uint8_t skip_size;
+    uint16_t v_max;
+    uint8_t hysteresis;
 } opportunity_t;
 
+/**
+ * Initialize the 'opportunity' struct
+ * 
+ * TODO: Add and describe parameters
+ */
 void OP_init(opportunity_t *opportunity,
              uint8_t num_channels,
              uint8_t skip_size,
              uint16_t v_max,
              uint8_t hysteresis);
 
+/**
+ * Frees the 'opportunity' struct
+ * 
+ * TODO: Add and describe parameters
+ */
+void OP_destroy(opportunity_t *self);
+
+/**
+ * Processes the incoming CV data in main.cpp
+ * [buffer_t CV_in/CV_out]
+ * 
+ * TODO: Add and describe parameters
+ */
 void OP_process(opportunity_t *opportunity, uint16_t *val, uint16_t *output);
+
+#endif /* OPPORTUNITY_H */

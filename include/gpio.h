@@ -1,7 +1,10 @@
 /**
  * gpio.h —— (Max Ardito, 07/10/20)
  * 
- * Structure for pins used in the ATMEGA328
+ * Wrapper classs used in order to create a layer of abstraction
+ * in between the hardware and the module's API. Consists of the general
+ * structure for the pin layout used on the ATMEGA328, as well as 
+ * read/write wrapper functions based on the <Arduino.h> lib.
  */
 
 #include "globals.h"
@@ -12,7 +15,6 @@ typedef uint8_t pin_t;
 /**
  * Struct representing the entire IO for the module
  */
-
 typedef struct GPIO
 {
     pin_t IN[NUM_CHANNELS];
