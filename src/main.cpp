@@ -36,10 +36,12 @@ uint16_t output[NUM_CHANNELS];
 void setup()
 {
   GPIO = GPIO_init();
-  for (int i = 0; i < NUM_CHANNELS; i++)
-  {
-    CH_init(opportunity.channel + i, SKIP_SIZE, V_MAX, HYSTERESIS);
-  }
+
+  OP_init(&opportunity,
+          NUM_CHANNELS,
+          SKIP_SIZE,
+          V_MAX,
+          HYSTERESIS);
 
   Serial.begin(9600);
 }
@@ -58,16 +60,7 @@ void loop()
 {
   GPIO_read(&GPIO, val);
 
-  for (int i = 0; i < NUM_CHANNELS; i++)
-  {
-    //val = analogRead(analogPins[i]);
-    // Serial.print("input: ");
-    // Serial.println(val, DEC);
-    CH_process(&opportunity.channel[i], &val[i], &output[i]);
-    // Serial.print("proc: ");
-    // Serial.println(output, DEC);
-    // Serial.print("out");
-    // Serial.println(output <= 511 ? LOW : HIGH, DEC);
-  }
+  OP_process(&opportunity, val, output);
+
   GPIO_write(&GPIO, output);
 }
