@@ -14,10 +14,10 @@
 
 extern "C"
 {
-#include "channel.h"
+#include "opportunity.h"
 }
 
-channel_t op[NUM_CHANNELS];
+opportunity_t opportunity;
 GPIO_t GPIO;
 
 uint16_t val[NUM_CHANNELS];
@@ -38,7 +38,7 @@ void setup()
   GPIO = GPIO_init();
   for (int i = 0; i < NUM_CHANNELS; i++)
   {
-    CH_init(op + i, SKIP_SIZE, V_MAX, HYSTERESIS);
+    CH_init(opportunity.channel + i, SKIP_SIZE, V_MAX, HYSTERESIS);
   }
 
   Serial.begin(9600);
@@ -63,7 +63,7 @@ void loop()
     //val = analogRead(analogPins[i]);
     // Serial.print("input: ");
     // Serial.println(val, DEC);
-    CH_process(&op[i], &val[i], &output[i]);
+    CH_process(&opportunity.channel[i], &val[i], &output[i]);
     // Serial.print("proc: ");
     // Serial.println(output, DEC);
     // Serial.print("out");
