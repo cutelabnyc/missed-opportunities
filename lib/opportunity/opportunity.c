@@ -1,106 +1,69 @@
 #include <opportunity.h>
-
-void OP_init(opportunity_t *op, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
-{
-    op->_skipSize = skipSize;
-    op->_open = true;
-    op->_count = op->_skipSize - 1;
-    op->_maxVoltage = vmax;
-    op->_crossVoltage = ((vmax + 1) / 2) - 1;
-    op->_lastOutput = 0;
-    op->_hysteresis = hysteresis;
-    op->_downThreshold = op->_crossVoltage - op->_hysteresis;
-    op->_upThreshold = op->_crossVoltage + op->_hysteresis;
-}
+#include <stdlib.h>
 
 /**
- * Tear down resources associated with 'opportunity' struct
+ * void OP_init(opportunity_t *opportunity,
+ *              uint8_t num_channels,
+ *              uint8_t skip_size,
+ *              uint16_t v_max,
+ *              uint8_t hysteresis);
+ * 
+ * Allocates and sets all the default values for the module's
+ * signal processing. These values originate at [/include/globals.h]
+ * and should be changed there.
  * 
  * TODO: Add and describe parameters
  */
-void OP_destroy(opportunity_t *op)
+void OP_init(opportunity_t *opportunity,
+             uint8_t num_channels,
+             uint8_t skip_size,
+             uint16_t v_max,
+             uint8_t hysteresis)
 {
-    // nothing to do
-}
+    // Allocates the number of channels
+    opportunity->channel = (channel_t *)malloc(sizeof(channel_t) * num_channels);
 
-/**
- * Set the skip size
- * 
- * TODO: Add and describe parameters
- */
-void OP_set_skip_size(opportunity_t *op, uint8_t skipSize)
-{
-    op->_skipSize = skipSize;
-}
+    // Sets all the default values from [/include/globals.h]
+    opportunity->num_channels = num_channels;
+    opportunity->skip_size = skip_size;
+    opportunity->v_max = v_max;
+    opportunity->hysteresis = hysteresis;
 
-/**
- * Set the maximum voltage
- * 
- * TODO: Add and describe parameters
- */
-void OP_set_max_voltage(opportunity_t *op, uint16_t vmax)
-{
-    op->_maxVoltage = vmax;
-    op->_crossVoltage = ((vmax + 1) / 2) - 1;
-    op->_downThreshold = op->_crossVoltage - op->_hysteresis;
-    op->_upThreshold = op->_crossVoltage - op->_hysteresis;
-}
-
-/**
- * Set the hysteresis as an unsigned integer
- * 
- * TODO: Add and describe parameters
- */
-void OP_set_hysteresis(opportunity_t *op, uint16_t hysteresis)
-{
-    op->_hysteresis = hysteresis;
-    op->_downThreshold = op->_crossVoltage - op->_hysteresis;
-    op->_upThreshold = op->_crossVoltage - op->_hysteresis;
-}
-
-/**
- * void OP_process(opportunity_t *self);
- * 
- * TODO: Add and describe parameters
- */
-void OP_process(opportunity_t *op, uint16_t *in, uint16_t *out)
-{
-    // First check if you've got a zero crossing
-    uint16_t thisSample = *in;
-
-    // Currently above threshold
-    if (op->_lastOutput)
+    // Initialize each channel
+    for (int i = 0; i < num_channels; i++)
     {
-        op->_lastOutput = thisSample <= op->_downThreshold ? 0 : op->_maxVoltage;
+        CH_init(&opportunity->channel[i],
+                opportunity->skip_size,
+                opportunity->v_max,
+                opportunity->hysteresis);
     }
+}
 
-    // Currently below threshold
-    else
+/**
+ * void OP_destroy(opportunity_t *self);
+ * 
+ * TODO: Add and describe parameters
+ */
+void OP_destroy(opportunity_t *self)
+{
+    free(self->channel);
+}
+
+/**
+ * void OP_process(opportunity_t *opportunity, uint16_t *val, uint16_t *output)
+ * 
+ * TODO: Add and describe parameters
+ */
+void OP_process(opportunity_t *opportunity, uint16_t *val, uint16_t *output)
+{
+    // Cycles through the channels and processes the CV sent to each channel
+    for (int i = 0; i < opportunity->num_channels; i++)
     {
-        if (thisSample > op->_upThreshold)
-        {
-            op->_lastOutput = op->_maxVoltage;
-
-            // Increment the count for a 0->1 transition
-            op->_count++;
-
-            // Close the op when you've counted enough zero crossings
-            if (op->_count >= op->_skipSize)
-            {
-                op->_open = false;
-                op->_count = 0;
-            }
-            else
-            {
-                op->_open = true;
-            }
-        }
+        CH_process(&opportunity->channel[i],
+                   &val[i],
+                   &output[i],
+                   opportunity->skip_size,
+                   opportunity->v_max,
+                   opportunity->hysteresis);
     }
-
-    // Write the output
-    *out = op->_open ? thisSample : 0;
-
-    // Check threshold
-    if (*out <= 511)
-        *out = 0;
 }
