@@ -11,19 +11,6 @@
 #include <stdbool.h>
 
 /**
- * prob_value_t: Flags for each probability density
- * 
- * TODO: Add and describe parameters
- */
-typedef enum
-{
-    p_50,
-    p_25,
-    p_15,
-    p_5
-} prob_value_t;
-
-/**
  * probability_t: Contains individual probability gates
  * and densities
  * 
@@ -32,16 +19,23 @@ typedef enum
 typedef struct probability
 {
     bool gate;
-    prob_value_t prob_value;
+    uint8_t density;
 } probability_t;
 
 /**
- * Initializes a probability struct using one of
- * the prob_value_t flags
+ * Initializes a probability struct using a custom
+ * probability density (between 0 - 100)
  * 
  * TODO: Add and describe parameters
  */
-void PROB_init(probability_t *self, prob_value_t prob_value);
+void PROB_init(probability_t *self, uint8_t density);
+
+/**
+ * Tear down resources associated with 'probability' struct
+ * 
+ * TODO: Add and describe parameters
+ */
+void PROB_destroy(probability_t *self);
 
 /**
  * Process function for probability

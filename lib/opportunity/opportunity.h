@@ -24,7 +24,6 @@ typedef struct opportunity
     probability_t *probability; // Corresponding probabilities for each I/O channel
 
     uint8_t num_channels;
-    uint8_t skip_size;
     uint16_t v_max;
     uint8_t hysteresis;
 } opportunity_t;
@@ -36,9 +35,9 @@ typedef struct opportunity
  */
 void OP_init(opportunity_t *self,
              uint8_t num_channels,
-             uint8_t skip_size,
              uint16_t v_max,
-             uint8_t hysteresis);
+             uint8_t hysteresis,
+             uint8_t *densities);
 
 /**
  * Frees the 'opportunity' struct

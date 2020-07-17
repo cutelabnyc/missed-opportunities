@@ -4,9 +4,9 @@
 /**
  * void OP_init(opportunity_t *self,
  *              uint8_t num_channels,
- *              uint8_t skip_size,
  *              uint16_t v_max,
- *              uint8_t hysteresis);
+ *              uint8_t hysteresis,
+ *              uint8_t *densities);
  * 
  * Allocates and sets all the default values for the module's
  * signal processing. These values originate at [/include/globals.h]
@@ -16,9 +16,9 @@
  */
 void OP_init(opportunity_t *self,
              uint8_t num_channels,
-             uint8_t skip_size,
              uint16_t v_max,
-             uint8_t hysteresis)
+             uint8_t hysteresis,
+             uint8_t *densities)
 {
     // Allocates the number of channels
     self->channel = (channel_t *)malloc(sizeof(channel_t) * num_channels);
@@ -26,7 +26,6 @@ void OP_init(opportunity_t *self,
 
     // Sets all the default values from [/include/globals.h]
     self->num_channels = num_channels;
-    self->skip_size = skip_size;
     self->v_max = v_max;
     self->hysteresis = hysteresis;
 
@@ -34,11 +33,10 @@ void OP_init(opportunity_t *self,
     for (int i = 0; i < num_channels; i++)
     {
         CH_init(&self->channel[i],
-                self->skip_size,
                 self->v_max,
                 self->hysteresis);
 
-        PROB_init(&self->probability[i], i); // loop cycles through the prob_value_t enum
+        PROB_init(&self->probability[i], densities[i]);
     }
 }
 
@@ -71,7 +69,6 @@ void OP_process(opportunity_t *self, uint16_t *val, uint16_t *output)
                    &val[i],
                    &output[i],
                    self->probability[i].gate,
-                   self->skip_size,
                    self->v_max,
                    self->hysteresis);
     }
