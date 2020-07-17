@@ -31,7 +31,7 @@ typedef enum
  */
 typedef struct probability
 {
-    bool rando;
+    bool gate;
     prob_value_t prob_value;
 } probability_t;
 

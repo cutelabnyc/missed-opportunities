@@ -11,6 +11,7 @@
 #define OPPORTUNITY_H
 
 #include <channel.h>
+#include <probability.h>
 
 /**
  * opportunity_t: Module's main data structure
@@ -19,7 +20,8 @@
  */
 typedef struct opportunity
 {
-    channel_t *channel; // Each individual I/O channel
+    channel_t *channel;         // Each individual I/O channel
+    probability_t *probability; // Corresponding probabilities for each I/O channel
 
     uint8_t num_channels;
     uint8_t skip_size;
@@ -32,7 +34,7 @@ typedef struct opportunity
  * 
  * TODO: Add and describe parameters
  */
-void OP_init(opportunity_t *opportunity,
+void OP_init(opportunity_t *self,
              uint8_t num_channels,
              uint8_t skip_size,
              uint16_t v_max,
@@ -51,6 +53,6 @@ void OP_destroy(opportunity_t *self);
  * 
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *opportunity, uint16_t *val, uint16_t *output);
+void OP_process(opportunity_t *self, uint16_t *val, uint16_t *output);
 
 #endif /* OPPORTUNITY_H */

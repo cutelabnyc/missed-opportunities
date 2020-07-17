@@ -12,7 +12,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <probability.h>
 
 /**
  * channel_t: Struct containing CV threshold variables
@@ -22,8 +21,6 @@
  */
 typedef struct channel
 {
-    probability_t probability;
-
     bool _open;
     uint16_t _lastOutput;
     uint16_t _crossVoltage; // should be maxVoltage / 2
@@ -56,6 +53,7 @@ void CH_destroy(channel_t *self);
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *out,
+                bool prob,
                 uint8_t skip_size,
                 uint16_t v_max,
                 uint8_t hysteresis);
