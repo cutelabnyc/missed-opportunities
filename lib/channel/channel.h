@@ -12,15 +12,18 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <probability.h>
 
 /**
  * channel_t: Struct containing CV prossing variables
- * and unique [probability_t] data for each I/Ochannel
+ * and unique [probability_t] data for each I/O channel
  * 
  * TODO: Add and describe parameters
  */
 typedef struct channel
 {
+    probability_t probability;
+
     bool _open;
     uint8_t _count;
     uint16_t _lastOutput;

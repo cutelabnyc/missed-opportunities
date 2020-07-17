@@ -1,4 +1,5 @@
 #include <channel.h>
+#include <stdlib.h>
 
 /**
  * void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
@@ -59,13 +60,13 @@ void CH_process(channel_t *self,
             self->_lastOutput = v_max;
 
             // Increment the count for a 0->1 transition
-            self->_count++;
+            //self->_count++;
 
             // Close the self when you've counted enough zero crossings
-            if (self->_count >= skip_size)
+            if (rand() & 1)
             {
                 self->_open = false;
-                self->_count = 0;
+                //self->_count = 0;
             }
             else
             {
