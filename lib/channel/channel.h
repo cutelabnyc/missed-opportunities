@@ -15,7 +15,7 @@
 #include <probability.h>
 
 /**
- * channel_t: Struct containing CV prossing variables
+ * channel_t: Struct containing CV threshold variables
  * and unique [probability_t] data for each I/O channel
  * 
  * TODO: Add and describe parameters
@@ -25,7 +25,6 @@ typedef struct channel
     probability_t probability;
 
     bool _open;
-    uint8_t _count;
     uint16_t _lastOutput;
     uint16_t _crossVoltage; // should be maxVoltage / 2
     uint16_t _downThreshold;

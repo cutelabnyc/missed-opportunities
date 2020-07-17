@@ -8,8 +8,9 @@
  */
 void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
 {
+    PROB_init(&self->probability, p_50);
+
     self->_open = true;
-    self->_count = skipSize - 1;
     self->_crossVoltage = ((vmax + 1) / 2) - 1;
     self->_lastOutput = 0;
     self->_downThreshold = self->_crossVoltage - hysteresis;
@@ -59,14 +60,10 @@ void CH_process(channel_t *self,
         {
             self->_lastOutput = v_max;
 
-            // Increment the count for a 0->1 transition
-            //self->_count++;
-
             // Close the self when you've counted enough zero crossings
-            if (rand() & 1)
+            if (PROB_process(&self->probability))
             {
                 self->_open = false;
-                //self->_count = 0;
             }
             else
             {

@@ -11,14 +11,43 @@
 #include <stdbool.h>
 
 /**
- * probability_t: Struct containing CV prossing variables
- * and unique [probability_t] data for each I/O channel
+ * prob_value_t: Flags for each probability density
+ * 
+ * TODO: Add and describe parameters
+ */
+typedef enum
+{
+    p_50,
+    p_25,
+    p_15,
+    p_5
+} prob_value_t;
+
+/**
+ * probability_t: Contains individual probability gates
+ * and densities
  * 
  * TODO: Add and describe parameters
  */
 typedef struct probability
 {
     bool rando;
+    prob_value_t prob_value;
 } probability_t;
+
+/**
+ * Initializes a probability struct using one of
+ * the prob_value_t flags
+ * 
+ * TODO: Add and describe parameters
+ */
+void PROB_init(probability_t *self, prob_value_t prob_value);
+
+/**
+ * Process function for probability
+ * 
+ * TODO: Add and describe parameters
+ */
+bool PROB_process(probability_t *self);
 
 #endif /* PROBABILITY_H */
