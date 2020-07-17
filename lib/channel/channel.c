@@ -30,8 +30,7 @@ void CH_destroy(channel_t *self)
  *                 uint16_t *in,
  *                 uint16_t *out,
  *                 bool prob,
- *                 uint16_t v_max,
- *                 uint8_t hysteresis)
+ *                 uint16_t v_max)
  * 
  * TODO: Add and describe parameters
  */
@@ -39,8 +38,7 @@ void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *out,
                 bool prob,
-                uint16_t v_max,
-                uint8_t hysteresis)
+                uint16_t v_max)
 {
     // First check if you've got a zero crossing
     uint16_t thisSample = *in;

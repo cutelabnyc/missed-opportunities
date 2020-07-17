@@ -69,7 +69,6 @@ void OP_process(opportunity_t *self, uint16_t *val, uint16_t *output)
                    &val[i],
                    &output[i],
                    self->probability[i].gate,
-                   self->v_max,
-                   self->hysteresis);
+                   self->v_max);
     }
 }
