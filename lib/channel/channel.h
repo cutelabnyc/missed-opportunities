@@ -14,15 +14,14 @@
 #include <stdbool.h>
 
 /**
- * channel_t: Struct containing CV prossing variables
- * and unique [probability_t] data for each I/Ochannel
+ * channel_t: Struct containing CV threshold variables
+ * and unique [probability_t] data for each I/O channel
  * 
  * TODO: Add and describe parameters
  */
 typedef struct channel
 {
     bool _open;
-    uint8_t _count;
     uint16_t _lastOutput;
     uint16_t _crossVoltage; // should be maxVoltage / 2
     uint16_t _downThreshold;
@@ -36,7 +35,7 @@ typedef struct channel
  * 
  * TODO: Add and describe parameters
  */
-void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis);
+void CH_init(channel_t *self, uint16_t vmax, uint16_t hysteresis);
 
 /**
  * Tear down resources associated with 'channel' struct
@@ -54,8 +53,7 @@ void CH_destroy(channel_t *self);
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *out,
-                uint8_t skip_size,
-                uint16_t v_max,
-                uint8_t hysteresis);
+                bool prob,
+                uint16_t v_max);
 
 #endif /* CHANNEL_H */
