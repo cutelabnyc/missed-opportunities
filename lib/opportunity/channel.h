@@ -11,7 +11,7 @@
 #define CHANNEL_H
 
 #include <stdint.h>
-#include <stdbool.h>
+#include "cuteop.h"
 
 /**
  * channel_t: Struct containing CV prossing variables
@@ -21,12 +21,11 @@
  */
 typedef struct channel
 {
-    bool _open;
-    uint8_t _count;
-    uint16_t _lastOutput;
-    uint16_t _crossVoltage; // should be maxVoltage / 2
-    uint16_t _downThreshold;
-    uint16_t _upThreshold;
+    t_thresh _input_thresh;
+    t_gate _gate;
+    t_random _random;
+    t_edge _edge;
+    t_thresh _random_thresh;
 } channel_t;
 
 /*==========================================*/
@@ -36,7 +35,7 @@ typedef struct channel
  * 
  * TODO: Add and describe parameters
  */
-void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis);
+void CH_init(channel_t *self, uint16_t skipSize, uint16_t vmax, uint16_t hysteresis);
 
 /**
  * Tear down resources associated with 'channel' struct
@@ -53,9 +52,6 @@ void CH_destroy(channel_t *self);
  */
 void CH_process(channel_t *self,
                 uint16_t *in,
-                uint16_t *out,
-                uint8_t skip_size,
-                uint16_t v_max,
-                uint8_t hysteresis);
+                uint16_t *out);
 
 #endif /* CHANNEL_H */

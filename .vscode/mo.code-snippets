@@ -1,0 +1,28 @@
+{
+    "Cutelab Op": {
+		"prefix": "cuteop",
+		"body": [
+			"#ifndef ${TM_FILENAME/(.*)\\..+$/${1:/upcase}/}_H",
+			"#define ${TM_FILENAME/(.*)\\..+$/${1:/upcase}/}_H",
+			"",
+			"#include <stdint.h>",
+			"",
+			"#ifdef __cplusplus",
+			"extern \"C\" {",
+			"#endif",
+			"",
+			"typedef struct {",
+			"} t_${TM_FILENAME/(.*)\\..+$/$1/};",
+			"",
+			"void ${TM_FILENAME/(.*)\\..+$/$1/}_init(t_${TM_FILENAME/(.*)\\..+$/$1/} *self);",
+			"void ${TM_FILENAME/(.*)\\..+$/$1/}_process(t_${TM_FILENAME/(.*)\\..+$/$1/} *self, uint16_t *in, uint16_t *out);",
+			"",
+			"#ifdef __cplusplus",
+			"}", 
+			"#endif",
+			"",
+			"#endif // ${TM_FILENAME/(.*)\\..+$/${1:/upcase}/}_H"
+		],
+		"description": "Cutelab operator definiton"
+	}
+}
