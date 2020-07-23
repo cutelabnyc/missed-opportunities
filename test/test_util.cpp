@@ -12,6 +12,6 @@ void run_equality_test(
         process(handle, ins + i, outs + i);
     }
     for (uint16_t i = 0; i < count; i++) {
-        TEST_ASSERT_EQUAL_UINT16(outs[i], expected[i]);
+        TEST_ASSERT_EQUAL_UINT16(expected[i], outs[i]);
     }
 }

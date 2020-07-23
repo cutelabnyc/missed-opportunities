@@ -7,11 +7,11 @@
  *              uint8_t skip_size,
  *              uint16_t v_max,
  *              uint8_t hysteresis);
- * 
+ *
  * Allocates and sets all the default values for the module's
  * signal processing. These values originate at [/include/globals.h]
  * and should be changed there.
- * 
+ *
  * TODO: Add and describe parameters
  */
 void OP_init(opportunity_t *opportunity,
@@ -41,7 +41,7 @@ void OP_init(opportunity_t *opportunity,
 
 /**
  * void OP_destroy(opportunity_t *self);
- * 
+ *
  * TODO: Add and describe parameters
  */
 void OP_destroy(opportunity_t *self)
@@ -49,9 +49,15 @@ void OP_destroy(opportunity_t *self)
     free(self->channel);
 }
 
+void OP_set_mock_random(opportunity_t *self, bool doMock)
+{
+	for (int i = 0; i < self->num_channels; i++)
+		CH_set_mock_random(&self->channel[i], doMock);
+}
+
 /**
  * void OP_process(opportunity_t *opportunity, uint16_t *val, uint16_t *output)
- * 
+ *
  * TODO: Add and describe parameters
  */
 void OP_process(opportunity_t *opportunity, uint16_t *val, uint16_t *output)
@@ -61,9 +67,6 @@ void OP_process(opportunity_t *opportunity, uint16_t *val, uint16_t *output)
     {
         CH_process(&opportunity->channel[i],
                    &val[i],
-                   &output[i],
-                   opportunity->skip_size,
-                   opportunity->v_max,
-                   opportunity->hysteresis);
+                   &output[i]);
     }
 }
