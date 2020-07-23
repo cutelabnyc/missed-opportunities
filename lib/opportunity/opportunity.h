@@ -11,7 +11,6 @@
 #define OPPORTUNITY_H
 
 #include <channel.h>
-#include <probability.h>
 #include <stdbool.h>
 
 /**
@@ -22,7 +21,7 @@
 typedef struct opportunity
 {
     channel_t *channel;         // Each individual I/O channel
-    probability_t *probability; // Corresponding probabilities for each I/O channel
+    uint16_t *probability; 		// Corresponding probabilities for each I/O channel
 
     uint8_t num_channels;
     uint16_t v_max;
@@ -38,7 +37,7 @@ void OP_init(opportunity_t *self,
              uint8_t num_channels,
              uint16_t v_max,
              uint8_t hysteresis,
-             uint8_t *densities);
+             uint16_t *densities);
 
 /**
  * Frees the 'opportunity' struct

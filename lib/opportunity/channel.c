@@ -5,7 +5,7 @@
  *
  * TODO: Add and describe parameters
  */
-void CH_init(channel_t *self, uint16_t skipSize, uint16_t vmax, uint16_t hysteresis)
+void CH_init(channel_t *self, uint16_t vmax, uint16_t hysteresis)
 {
     thresh_init(&self->_input_thresh, (vmax / 2) - 1, hysteresis);
     random_init(&self->_random);
@@ -36,6 +36,7 @@ void CH_set_mock_random(channel_t *self, bool doMock)
  */
 void CH_process(channel_t *self,
                 uint16_t *in,
+				uint16_t *prob,
                 uint16_t *out)
 {
     // Threshold the input to +/- 2.5V
@@ -52,6 +53,7 @@ void CH_process(channel_t *self,
 
     // // Threshold the random value
     uint16_t postRandomThresh;
+	thresh_set_cutoff(&self->_random_thresh, *prob);
     thresh_process(&self->_random_thresh, &randomOutput, &postRandomThresh);
 
     // // Gate the output accordingly

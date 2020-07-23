@@ -17,7 +17,7 @@
 /**
  * channel_t: Struct containing CV threshold variables
  * and unique [probability_t] data for each I/O channel
- * 
+ *
  * TODO: Add and describe parameters
  */
 typedef struct channel
@@ -60,8 +60,7 @@ void CH_set_mock_random(channel_t *self, bool doMock);
  */
 void CH_process(channel_t *self,
                 uint16_t *in,
-                uint16_t *out,
-                bool prob,
-                uint16_t v_max);
+				uint16_t *prob,
+                uint16_t *out);
 
 #endif /* CHANNEL_H */
