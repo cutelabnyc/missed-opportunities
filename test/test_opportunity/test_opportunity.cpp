@@ -10,9 +10,10 @@ opportunity_t self;
 
 void setUp(void)
 {
+    uint8_t prob_densities[1] = {100};
     // set stuff up here
-    OP_init(&self, 1, 2, 1023, 0);
-	OP_set_mock_random(&self, true);
+    OP_init(&self, 1, 1023, 0, prob_densities);
+    OP_set_mock_random(&self, true);
 }
 
 void tearDown(void)

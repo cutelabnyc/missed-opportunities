@@ -24,6 +24,8 @@ GPIO_t GPIO;
 buffer_t CV_in[NUM_CHANNELS];
 buffer_t CV_out[NUM_CHANNELS];
 
+uint8_t prob_densities[NUM_CHANNELS] = {50, 25, 15, 5};
+
 /**
  * void setup(): 
  * 
@@ -37,9 +39,9 @@ void setup()
 
   OP_init(&opportunity,
           NUM_CHANNELS,
-          SKIP_SIZE,
           V_MAX,
-          HYSTERESIS);
+          HYSTERESIS,
+          prob_densities);
 
   Serial.begin(9600);
 }

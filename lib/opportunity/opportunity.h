@@ -11,6 +11,7 @@
 #define OPPORTUNITY_H
 
 #include <channel.h>
+#include <probability.h>
 #include <stdbool.h>
 
 /**
@@ -20,10 +21,10 @@
  */
 typedef struct opportunity
 {
-    channel_t *channel; // Each individual I/O channel
+    channel_t *channel;         // Each individual I/O channel
+    probability_t *probability; // Corresponding probabilities for each I/O channel
 
     uint8_t num_channels;
-    uint8_t skip_size;
     uint16_t v_max;
     uint8_t hysteresis;
 } opportunity_t;
@@ -33,11 +34,11 @@ typedef struct opportunity
  *
  * TODO: Add and describe parameters
  */
-void OP_init(opportunity_t *opportunity,
+void OP_init(opportunity_t *self,
              uint8_t num_channels,
-             uint8_t skip_size,
              uint16_t v_max,
-             uint8_t hysteresis);
+             uint8_t hysteresis,
+             uint8_t *densities);
 
 /**
  * Frees the 'opportunity' struct
@@ -59,6 +60,6 @@ void OP_set_mock_random(opportunity_t *self, bool doMock);
  *
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *opportunity, uint16_t *val, uint16_t *output);
+void OP_process(opportunity_t *self, uint16_t *val, uint16_t *output);
 
 #endif /* OPPORTUNITY_H */
