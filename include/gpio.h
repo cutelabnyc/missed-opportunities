@@ -19,7 +19,7 @@ typedef struct GPIO
 {
     pin_t IN[NUM_CHANNELS];
     pin_t OUT[NUM_CHANNELS];
-    pin_t LED[NUM_CHANNELS]; // TODO: Integrate LED pins
+    pin_t RESET;
 } GPIO_t;
 
 /**
@@ -28,17 +28,18 @@ typedef struct GPIO
 GPIO_t GPIO_init(void)
 {
     GPIO_t self = {
-        {A2, A3, A4, A5}, // Analog Ins
-        {2, 3, 4, 5},     // Digital Outs
-        {13, 0, 0, 0}     // LED Outs
+        {A2, A3, A4, A5}, // CV Ins
+        {2, 3, 4, 5},     // CV Outs
+        0                 // Reset In
     };
 
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
         pinMode(self.IN[i], INPUT);
         pinMode(self.OUT[i], OUTPUT);
-        pinMode(self.LED[i], OUTPUT);
     }
+
+    pinMode(self.RESET, INPUT);
 
     return self;
 }
@@ -46,12 +47,13 @@ GPIO_t GPIO_init(void)
 /**
  * Reads incoming data from all inputs
  */
-void GPIO_read(GPIO_t *self, uint16_t *in)
+void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t reset)
 {
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
         in[i] = analogRead(self->IN[i]);
     }
+    reset = analogRead(self->RESET);
 }
 
 /**

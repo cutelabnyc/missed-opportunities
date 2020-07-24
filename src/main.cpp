@@ -24,6 +24,8 @@ GPIO_t GPIO;
 buffer_t CV_in[NUM_CHANNELS];
 buffer_t CV_out[NUM_CHANNELS];
 
+uint16_t RESET_in;
+
 // TODO: Stash these probabilities in the hardware
 uint16_t prob_densities[NUM_CHANNELS] = {511, 267, 150, 100};
 
@@ -59,7 +61,7 @@ void setup()
  */
 void loop()
 {
-  GPIO_read(&GPIO, CV_in);
+  GPIO_read(&GPIO, CV_in, RESET_in);
 
   OP_process(&opportunity, CV_in, CV_out);
 
