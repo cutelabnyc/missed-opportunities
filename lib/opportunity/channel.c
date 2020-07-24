@@ -24,19 +24,27 @@ void CH_destroy(channel_t *self)
     // nothing to do
 }
 
+/**
+ * void CH_set_mock_random(channel_t *self, bool doMock)
+ *
+ * TODO: Add and describe parameters
+ */
 void CH_set_mock_random(channel_t *self, bool doMock)
 {
-	random_set_mock(&self->_random, doMock);
+    random_set_mock(&self->_random, doMock);
 }
 
 /**
- * Process a frame of audio
+ * void CH_process(channel_t *self,
+ *               uint16_t *in,
+ *               uint16_t *prob,
+ *               uint16_t *out)
  *
  * TODO: Add and describe parameters
  */
 void CH_process(channel_t *self,
                 uint16_t *in,
-				uint16_t *prob,
+                uint16_t *prob,
                 uint16_t *out)
 {
     // Threshold the input to +/- 2.5V
@@ -53,9 +61,9 @@ void CH_process(channel_t *self,
 
     // // Threshold the random value
     uint16_t postRandomThresh;
-	thresh_set_cutoff(&self->_random_thresh, *prob);
+    thresh_set_cutoff(&self->_random_thresh, 1023 - *prob);
     thresh_process(&self->_random_thresh, &randomOutput, &postRandomThresh);
 
     // // Gate the output accordingly
-    gate_process(&self->_gate, in, &postRandomThresh, out);
+    gate_process(&self->_gate, &postThresh, &postRandomThresh, out);
 }
