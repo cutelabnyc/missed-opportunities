@@ -24,7 +24,7 @@ GPIO_t GPIO;
 buffer_t CV_in[NUM_CHANNELS];
 buffer_t CV_out[NUM_CHANNELS];
 
-uint8_t prob_densities[NUM_CHANNELS] = {50, 25, 15, 5};
+uint16_t prob_densities[NUM_CHANNELS] = {511, 267, 130, 70};
 
 /**
  * void setup(): 
