@@ -1,17 +1,17 @@
 #include <channel.h>
 
 /**
- * void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
+ * void CH_init(channel_t *self, uint8_t skipSize, uint16_t v_max, uint16_t hysteresis)
  *
  * TODO: Add and describe parameters
  */
-void CH_init(channel_t *self, uint16_t vmax, uint16_t hysteresis)
+void CH_init(channel_t *self, uint16_t v_max, uint16_t hysteresis)
 {
-    thresh_init(&self->_input_thresh, (vmax / 2) - 1, hysteresis);
+    thresh_init(&self->_input_thresh, (v_max / 2) - 1, hysteresis);
     random_init(&self->_random);
     gate_init(&self->_gate);
     edge_init(&self->_edge);
-    thresh_init(&self->_random_thresh, (vmax / 2) - 1, 0);
+    thresh_init(&self->_random_thresh, (v_max / 2) - 1, 0);
 }
 
 /**
@@ -38,6 +38,7 @@ void CH_set_mock_random(channel_t *self, bool doMock)
  * void CH_process(channel_t *self,
  *               uint16_t *in,
  *               uint16_t *prob,
+ *               uint16_t reset
  *               uint16_t *out)
  *
  * TODO: Add and describe parameters
@@ -45,6 +46,7 @@ void CH_set_mock_random(channel_t *self, bool doMock)
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *prob,
+                uint16_t reset,
                 uint16_t *out)
 {
     // Threshold the input to +/- 2.5V
@@ -54,6 +56,12 @@ void CH_process(channel_t *self,
     // // Convert to 0 -> 1 transition
     uint16_t postEdge;
     edge_process(&self->_edge, &postThresh, &postEdge);
+
+    // // Reset random value sequence if an edge is detected from reset inlet
+    if (reset)
+    {
+        random_reset(&self->_random, self->_random._seed);
+    }
 
     // // Generate a new random number on an edge
     uint16_t randomOutput;

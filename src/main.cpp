@@ -63,7 +63,7 @@ void loop()
 {
   GPIO_read(&GPIO, CV_in, RESET_in);
 
-  OP_process(&opportunity, CV_in, CV_out);
+  OP_process(&opportunity, CV_in, CV_out, RESET_in);
 
   GPIO_write(&GPIO, CV_out);
 }

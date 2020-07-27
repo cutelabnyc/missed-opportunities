@@ -36,7 +36,7 @@ typedef struct channel
  *
  * TODO: Add and describe parameters
  */
-void CH_init(channel_t *self, uint16_t vmax, uint16_t hysteresis);
+void CH_init(channel_t *self, uint16_t v_max, uint16_t hysteresis);
 
 /**
  * Tear down resources associated with 'channel' struct
@@ -61,6 +61,7 @@ void CH_set_mock_random(channel_t *self, bool doMock);
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *prob,
+                uint16_t reset,
                 uint16_t *out);
 
 #endif /* CHANNEL_H */

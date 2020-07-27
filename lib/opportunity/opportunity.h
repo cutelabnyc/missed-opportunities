@@ -12,6 +12,7 @@
 
 #include <channel.h>
 #include <stdbool.h>
+#include <cuteop.h>
 
 /**
  * opportunity_t: Module's main data structure
@@ -20,12 +21,16 @@
  */
 typedef struct opportunity
 {
-    channel_t *channel;         // Each individual I/O channel
-    uint16_t *probability; 		// Corresponding probabilities for each I/O channel
+    channel_t *channel;    // Each individual I/O channel
+    uint16_t *probability; // Corresponding probabilities for each I/O channel
+
+    t_thresh _reset_thresh;
+    t_edge _reset_edge;
 
     uint8_t num_channels;
     uint16_t v_max;
     uint8_t hysteresis;
+
 } opportunity_t;
 
 /**
@@ -59,6 +64,6 @@ void OP_set_mock_random(opportunity_t *self, bool doMock);
  *
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *self, uint16_t *val, uint16_t *output);
+void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t reset);
 
 #endif /* OPPORTUNITY_H */
