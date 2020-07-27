@@ -44,6 +44,7 @@ void setup()
           NUM_CHANNELS,
           V_MAX,
           HYSTERESIS,
+          RANDOM_SEED,
           prob_densities);
 
   Serial.begin(9600);

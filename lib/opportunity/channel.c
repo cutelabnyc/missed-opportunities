@@ -1,17 +1,14 @@
 #include <channel.h>
 #include <time.h>
 /**
- * void CH_init(channel_t *self, uint8_t skipSize, uint16_t v_max, uint16_t hysteresis)
+ * void CH_init(channel_t *self, uint8_t skipSize, uint16_t v_max, uint16_t hysteresis, uint16_t random_seed)
  *
  * TODO: Add and describe parameters
  */
-void CH_init(channel_t *self, uint16_t v_max, uint16_t hysteresis)
+void CH_init(channel_t *self, uint16_t v_max, uint16_t hysteresis, uint16_t random_seed)
 {
-    // Set random seed based on current time
-    uint16_t seed = time(0);
-
     thresh_init(&self->_input_thresh, (v_max / 2) - 1, hysteresis);
-    random_init(&self->_random, seed);
+    random_init(&self->_random, random_seed);
     gate_init(&self->_gate);
     edge_init(&self->_edge);
     thresh_init(&self->_random_thresh, (v_max / 2) - 1, 0);

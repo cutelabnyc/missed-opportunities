@@ -10,6 +10,8 @@
 #ifndef OPPORTUNITY_H
 #define OPPORTUNITY_H
 
+#define RESET_SEED_SEQUENCE(x) srand(x)
+
 #include <channel.h>
 #include <stdbool.h>
 #include <cuteop.h>
@@ -30,6 +32,7 @@ typedef struct opportunity
     uint8_t num_channels;
     uint16_t v_max;
     uint8_t hysteresis;
+    uint16_t random_seed;
 } opportunity_t;
 
 /**
@@ -41,6 +44,7 @@ void OP_init(opportunity_t *self,
              uint8_t num_channels,
              uint16_t v_max,
              uint8_t hysteresis,
+             uint16_t random_seed,
              uint16_t *densities);
 
 /**

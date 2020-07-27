@@ -36,7 +36,7 @@ typedef struct channel
  *
  * TODO: Add and describe parameters
  */
-void CH_init(channel_t *self, uint16_t v_max, uint16_t hysteresis);
+void CH_init(channel_t *self, uint16_t v_max, uint16_t hysteresis, uint16_t random_seed);
 
 /**
  * Tear down resources associated with 'channel' struct
