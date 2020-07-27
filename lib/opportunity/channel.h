@@ -61,7 +61,6 @@ void CH_set_mock_random(channel_t *self, bool doMock);
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *prob,
-                uint16_t reset,
                 uint16_t *out);
 
 #endif /* CHANNEL_H */

@@ -81,6 +81,12 @@ void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t
     uint16_t postEdge;
     edge_process(&self->_reset_edge, &postThresh, &postEdge);
 
+    // // Reset random value sequence if an edge is detected from reset inlet
+    if (postEdge)
+    {
+        random_reset(&self->channel[0]._random, self->channel[0]._random._seed);
+    }
+
     // Cycles through the channels and processes the CV sent to each channel
     for (int i = 0; i < self->num_channels; i++)
     {
@@ -88,7 +94,6 @@ void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t
         CH_process(&self->channel[i],
                    &input[i],
                    &self->probability[i],
-                   postEdge,
                    &output[i]);
     }
 }
