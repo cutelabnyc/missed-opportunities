@@ -1,5 +1,6 @@
 #include <opportunity.h>
 #include <stdlib.h>
+#include <Arduino.h>
 
 /**
  * void OP_init(opportunity_t *self,
@@ -71,11 +72,11 @@ void OP_set_mock_random(opportunity_t *self, bool doMock)
  *
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t reset)
+void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t *reset)
 {
     // Threshold the input to +/- 2.5V
     uint16_t postThresh;
-    thresh_process(&self->_reset_thresh, &reset, &postThresh);
+    thresh_process(&self->_reset_thresh, reset, &postThresh);
 
     // // Convert to 0 -> 1 transition
     uint16_t postEdge;

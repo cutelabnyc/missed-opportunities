@@ -30,7 +30,6 @@ typedef struct opportunity
     uint8_t num_channels;
     uint16_t v_max;
     uint8_t hysteresis;
-
 } opportunity_t;
 
 /**
@@ -64,6 +63,6 @@ void OP_set_mock_random(opportunity_t *self, bool doMock);
  *
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t reset);
+void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t *reset);
 
 #endif /* OPPORTUNITY_H */

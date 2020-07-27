@@ -47,13 +47,13 @@ GPIO_t GPIO_init(void)
 /**
  * Reads incoming data from all inputs
  */
-void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t reset)
+void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reset)
 {
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
         in[i] = analogRead(self->IN[i]);
     }
-    reset = analogRead(self->RESET);
+    *reset = analogRead(self->RESET);
 }
 
 /**
