@@ -10,5 +10,8 @@
 #define V_MAX (uint16_t)1023
 #define HYSTERESIS (uint8_t)3
 
+#define RANDOM_SEED 42
+#define INITIALIZE_SEED(x) srand(x)
+
 // Used for the I/O buffers in main.cpp
 typedef uint16_t buffer_t;

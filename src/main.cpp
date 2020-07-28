@@ -18,9 +18,6 @@ extern "C"
 #include "opportunity.h"
 }
 
-#define INITIALIZE_SEED(x) srand(x)
-#define RANDOM_SEED 42
-
 /**
  * BUG: Random seeds should be triggered by a hardware
  * input that initializes a random value from noise

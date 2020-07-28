@@ -28,9 +28,9 @@ typedef struct GPIO
 GPIO_t GPIO_init(void)
 {
     GPIO_t self = {
-        {A2, A3, A4, A1}, // CV Ins
+        {A2, A3, A4, A5}, // CV Ins
         {2, 3, 4, 5},     // CV Outs
-        A5                // Reset In
+        A1                // Reset In
     };
 
     for (int i = 0; i < NUM_CHANNELS; i++)
