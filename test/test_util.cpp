@@ -6,12 +6,15 @@ void run_equality_test(
     uint16_t *ins,
     uint16_t *outs,
     uint16_t *expected,
-    uint16_t count
-) {
-    for (uint16_t i = 0; i < count; i++) {
-        process(handle, ins + i, outs + i);
+    uint16_t *random_reset,
+    uint16_t count)
+{
+    for (uint16_t i = 0; i < count; i++)
+    {
+        process(handle, ins + i, outs + i, random_reset + i);
     }
-    for (uint16_t i = 0; i < count; i++) {
+    for (uint16_t i = 0; i < count; i++)
+    {
         TEST_ASSERT_EQUAL_UINT16(expected[i], outs[i]);
     }
 }

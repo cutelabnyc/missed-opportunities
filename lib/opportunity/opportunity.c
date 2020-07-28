@@ -1,6 +1,8 @@
 #include <opportunity.h>
 #include <stdlib.h>
 
+#define RESET_SEED_SEQUENCE(x) srand(x)
+
 /**
  * void OP_init(opportunity_t *self,
  *              uint8_t num_channels,
@@ -75,7 +77,7 @@ void OP_set_mock_random(opportunity_t *self, bool doMock)
  *
  * TODO: Add and describe parameters
  */
-static void _OP_process_reset(opportunity_t *self, uint16_t *reset)
+static bool _OP_process_reset(opportunity_t *self, uint16_t *reset)
 {
     // Threshold the input to +/- 2.5V
     uint16_t postThresh;
@@ -89,7 +91,10 @@ static void _OP_process_reset(opportunity_t *self, uint16_t *reset)
     if (postEdge)
     {
         RESET_SEED_SEQUENCE(self->random_seed);
+        return 1;
     }
+    else
+        return 0;
 }
 
 /**
@@ -122,4 +127,5 @@ void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t
 
     // Process CV inputs
     _OP_process_CV(self, input, output);
+    //}
 }

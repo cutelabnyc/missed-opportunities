@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <unity.h>
 
-typedef void (*processor_t)(void *handle, uint16_t *in, uint16_t *out);
+typedef void (*processor_t)(void *handle, uint16_t *in, uint16_t *out, uint16_t *random_reset);
 
 void run_equality_test(
     void *handle,
@@ -12,7 +12,7 @@ void run_equality_test(
     uint16_t *ins,
     uint16_t *outs,
     uint16_t *expected,
-    uint16_t count
-);
+    uint16_t *random_reset,
+    uint16_t count);
 
 #endif // TEST_UTIL_H
