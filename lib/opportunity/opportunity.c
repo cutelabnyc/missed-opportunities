@@ -2,26 +2,12 @@
 #include <stdlib.h>
 
 #define RESET_SEED_SEQUENCE(x) srand(x)
+#define RANDOM_SEED 42
 
-/**
- * void OP_init(opportunity_t *self,
- *              uint8_t num_channels,
- *              uint16_t v_max,
- *              uint8_t hysteresis,
- *              uint16_t random_seed
- *              uint8_t *densities);
- *
- * Allocates and sets all the default values for the module's
- * signal processing. These values originate at [/include/globals.h]
- * and should be changed there.
- *
- * TODO: Add and describe parameters
- */
 void OP_init(opportunity_t *self,
              uint8_t num_channels,
              uint16_t v_max,
              uint8_t hysteresis,
-             uint16_t random_seed,
              uint16_t *densities)
 {
     // Allocates the number of channels
@@ -36,7 +22,7 @@ void OP_init(opportunity_t *self,
     self->num_channels = num_channels;
     self->v_max = v_max;
     self->hysteresis = hysteresis;
-    self->random_seed = random_seed;
+    self->random_seed = RANDOM_SEED;
 
     // Initialize each channel
     for (int i = 0; i < num_channels; i++)
@@ -48,35 +34,22 @@ void OP_init(opportunity_t *self,
 
         self->probability[i] = densities[i];
     }
+
+    RESET_RANDOM_SEQUENCE(RANDOM_SEED);
 }
 
-/**
- * void OP_destroy(opportunity_t *self);
- *
- * TODO: Add and describe parameters
- */
 void OP_destroy(opportunity_t *self)
 {
     free(self->channel);
     free(self->probability);
 }
 
-/**
- * void OP_set_mock_random(opportunity_t *self, bool doMock)
- *
- * TODO: Add and describe parameters
- */
 void OP_set_mock_random(opportunity_t *self, bool doMock)
 {
     for (int i = 0; i < self->num_channels; i++)
         CH_set_mock_random(&self->channel[i], doMock);
 }
 
-/**
- * static void _OP_process_reset(opportunity_t *self, uint16_t *reset)
- *
- * TODO: Add and describe parameters
- */
 static bool _OP_process_reset(opportunity_t *self, uint16_t *reset)
 {
     // Threshold the input to +/- 2.5V
@@ -97,11 +70,6 @@ static bool _OP_process_reset(opportunity_t *self, uint16_t *reset)
         return 0;
 }
 
-/**
- * static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *output)
- *
- * TODO: Add and describe parameters
- */
 static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *output)
 {
     // Cycles through the channels and processes the CV sent to each channel
@@ -115,11 +83,6 @@ static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *outpu
     }
 }
 
-/**
- * void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t reset)
- *
- * TODO: Add and describe parameters
- */
 void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t *reset)
 {
     // Process reset input

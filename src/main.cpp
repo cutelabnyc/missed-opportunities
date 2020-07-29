@@ -35,8 +35,6 @@ uint16_t RESET_in;
 uint16_t prob_densities[NUM_CHANNELS] = {511, 267, 150, 100};
 
 /**
- * void setup(): 
- * 
  * Initializes the ATMEGA328's pins, initializes
  * the channel_t* struct's variables, starts off the Serial
  * monitor for possible debugging
@@ -49,17 +47,12 @@ void setup()
           NUM_CHANNELS,
           V_MAX,
           HYSTERESIS,
-          RANDOM_SEED,
           prob_densities);
-
-  INITIALIZE_SEED(RANDOM_SEED);
 
   Serial.begin(9600);
 }
 
 /**
- * void loop(): 
- * 
  * The three step process of the loop consists of reading CV values 
  * passed through the four channels of module by the ATMEGA328's
  * ADC [GPIO_read()], finding zero crossings and gating certain
