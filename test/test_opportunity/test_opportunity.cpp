@@ -8,7 +8,6 @@ extern "C"
 #include <opportunity.h>
 }
 
-#define RANDOM_SEED time(0)
 #define RESET_SEED(x) srand(x)
 
 opportunity_t self;
@@ -73,9 +72,6 @@ void test_seed_change(void)
 {
     OP_init(&self, 1, 1023, 3, prob_densities);
 
-    // Reset seed
-    RESET_SEED(RANDOM_SEED);
-
     uint16_t in_data[10] = {
         800, 0, 800, 0, 800, 0, 800, 0, 800, 0};
     uint16_t out_data[10];
@@ -92,7 +88,7 @@ void test_seed_change(void)
     }
 
     // Reset seed
-    RESET_SEED(RANDOM_SEED);
+    RESET_SEED(self.random_seed);
 
     // Get same data from reseting the seed
     run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, reset_data, 10);

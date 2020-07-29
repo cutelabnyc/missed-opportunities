@@ -1,7 +1,7 @@
 #include <opportunity.h>
 #include <stdlib.h>
 
-#define RESET_SEED_SEQUENCE(x) srand(x)
+#define RESET_RANDOM_SEQUENCE(x) srand(x)
 #define RANDOM_SEED 42
 
 void OP_init(opportunity_t *self,
@@ -35,6 +35,7 @@ void OP_init(opportunity_t *self,
         self->probability[i] = densities[i];
     }
 
+    // Initialize the random sequence by reseting seed
     RESET_RANDOM_SEQUENCE(RANDOM_SEED);
 }
 
@@ -63,7 +64,7 @@ static bool _OP_process_reset(opportunity_t *self, uint16_t *reset)
     // // Reset random value sequence if an edge is detected from reset inlet
     if (postEdge)
     {
-        RESET_SEED_SEQUENCE(self->random_seed);
+        RESET_RANDOM_SEQUENCE(self->random_seed);
         return 1;
     }
     else
