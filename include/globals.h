@@ -4,6 +4,7 @@
  * Project globals, mostly pre-processor stuff
  */
 #include <stdio.h>
+#include <time.h>
 
 #define NUM_CHANNELS (uint8_t)4
 #define V_MAX (uint16_t)1023

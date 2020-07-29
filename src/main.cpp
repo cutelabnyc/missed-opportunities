@@ -18,18 +18,23 @@ extern "C"
 #include "opportunity.h"
 }
 
+/**
+ * BUG: Random seeds should be triggered by a hardware
+ * input that initializes a random value from noise
+ */
+
 opportunity_t opportunity;
 GPIO_t GPIO;
 
 buffer_t CV_in[NUM_CHANNELS];
 buffer_t CV_out[NUM_CHANNELS];
 
+uint16_t RESET_in;
+
 // TODO: Stash these probabilities in the hardware
 uint16_t prob_densities[NUM_CHANNELS] = {511, 267, 150, 100};
 
 /**
- * void setup(): 
- * 
  * Initializes the ATMEGA328's pins, initializes
  * the channel_t* struct's variables, starts off the Serial
  * monitor for possible debugging
@@ -48,8 +53,6 @@ void setup()
 }
 
 /**
- * void loop(): 
- * 
  * The three step process of the loop consists of reading CV values 
  * passed through the four channels of module by the ATMEGA328's
  * ADC [GPIO_read()], finding zero crossings and gating certain
@@ -59,9 +62,9 @@ void setup()
  */
 void loop()
 {
-  GPIO_read(&GPIO, CV_in);
+  GPIO_read(&GPIO, CV_in, &RESET_in);
 
-  OP_process(&opportunity, CV_in, CV_out);
+  OP_process(&opportunity, CV_in, CV_out, &RESET_in);
 
   GPIO_write(&GPIO, CV_out);
 }

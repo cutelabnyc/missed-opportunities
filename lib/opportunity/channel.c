@@ -1,47 +1,25 @@
 #include <channel.h>
+#include <time.h>
 
-/**
- * void CH_init(channel_t *self, uint8_t skipSize, uint16_t vmax, uint16_t hysteresis)
- *
- * TODO: Add and describe parameters
- */
-void CH_init(channel_t *self, uint16_t vmax, uint16_t hysteresis)
+void CH_init(channel_t *self, uint16_t v_max, uint16_t hysteresis, uint16_t random_seed)
 {
-    thresh_init(&self->_input_thresh, (vmax / 2) - 1, hysteresis);
-    random_init(&self->_random);
+    thresh_init(&self->_input_thresh, (v_max / 2) - 1, hysteresis);
+    random_init(&self->_random, random_seed);
     gate_init(&self->_gate);
     edge_init(&self->_edge);
-    thresh_init(&self->_random_thresh, (vmax / 2) - 1, 0);
+    thresh_init(&self->_random_thresh, (v_max / 2) - 1, 0);
 }
 
-/**
- * void CH_destroy(channel_t *self)
- *
- * TODO: Add and describe parameters
- */
 void CH_destroy(channel_t *self)
 {
     // nothing to do
 }
 
-/**
- * void CH_set_mock_random(channel_t *self, bool doMock)
- *
- * TODO: Add and describe parameters
- */
 void CH_set_mock_random(channel_t *self, bool doMock)
 {
     random_set_mock(&self->_random, doMock);
 }
 
-/**
- * void CH_process(channel_t *self,
- *               uint16_t *in,
- *               uint16_t *prob,
- *               uint16_t *out)
- *
- * TODO: Add and describe parameters
- */
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *prob,

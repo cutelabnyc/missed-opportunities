@@ -1,70 +1,67 @@
 {
-    "configurations": [
-        {
-            "name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
-        },
-        {
-            "name": "Mac",
-            "macFrameworkPath": [],
-            "includePath": [
-                "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/lib/opportunity",
-                "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op@src-54ebb663a3b7d5cc12cbbefbfc1c742c/src",
-                "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/lib/pass-thru",
-                "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op/src",
-                "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op@src-6a156e383ec082098bfe325fc2e9ff75/src",
-                "/Users/Maxwell/.platformio/lib/MIDI Library/src",
-                "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
-                "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
-                "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
-                "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/include",
-                "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/src",
-                "/Users/Maxwell/.platformio/packages/framework-arduino-avr/cores/arduino",
-                "/Users/Maxwell/.platformio/packages/framework-arduino-avr/variants/standard",
-                "/Users/Maxwell/.platformio/packages/tool-unity",
-                ""
-            ],
-            "browse": {
-                "limitSymbolsToIncludedHeaders": true,
-                "path": [
-                    "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/lib/opportunity",
-                    "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op@src-54ebb663a3b7d5cc12cbbefbfc1c742c/src",
-                    "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/lib/pass-thru",
-                    "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op/src",
-                    "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op@src-6a156e383ec082098bfe325fc2e9ff75/src",
-                    "/Users/Maxwell/.platformio/lib/MIDI Library/src",
-                    "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
-                    "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/HID/src",
-                    "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
-                    "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
-                    "/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
-                    "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/include",
-                    "/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/src",
-                    "/Users/Maxwell/.platformio/packages/framework-arduino-avr/cores/arduino",
-                    "/Users/Maxwell/.platformio/packages/framework-arduino-avr/variants/standard",
-                    "/Users/Maxwell/.platformio/packages/tool-unity",
-                    ""
-                ]
-            },
-            "defines": [
-                "PLATFORMIO=40304",
-                "ARDUINO_AVR_UNO",
-                "F_CPU=16000000L",
-                "ARDUINO_ARCH_AVR",
-                "ARDUINO=10808",
-                "__AVR_ATmega328P__",
-                ""
-            ],
-            "intelliSenseMode": "clang-x64",
-            "cStandard": "c11",
-            "cppStandard": "c++11",
-            "compilerPath": "/Users/Maxwell/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
-            "compilerArgs": [
-                "-mmcu=atmega328p",
-                ""
-            ]
-        }
-    ],
-    "version": 4
+	"configurations": [
+		{
+			"name": "!!! WARNING !!! AUTO-GENERATED FILE, PLEASE DO NOT MODIFY IT AND USE https://docs.platformio.org/page/projectconf/section_env_build.html#build-flags"
+		},
+		{
+			"name": "Mac",
+			"macFrameworkPath": [],
+			"includePath": [
+				"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/lib/opportunity",
+				"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op@src-6a156e383ec082098bfe325fc2e9ff75/src",
+				"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/lib/pass-thru",
+				"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op/src",
+				"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op@src-54ebb663a3b7d5cc12cbbefbfc1c742c/src",
+				"/Users/Maxwell/.platformio/lib/MIDI Library/src",
+				"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+				"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+				"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+				"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+				"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+				"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/include",
+				"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/src",
+				"/Users/Maxwell/.platformio/packages/framework-arduino-avr/cores/arduino",
+				"/Users/Maxwell/.platformio/packages/framework-arduino-avr/variants/standard",
+				"/Users/Maxwell/.platformio/packages/tool-unity",
+				""
+			],
+			"browse": {
+				"limitSymbolsToIncludedHeaders": true,
+				"path": [
+					"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/lib/opportunity",
+					"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op@src-6a156e383ec082098bfe325fc2e9ff75/src",
+					"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/lib/pass-thru",
+					"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op/src",
+					"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/.pio/libdeps/uno/cute-op@src-54ebb663a3b7d5cc12cbbefbfc1c742c/src",
+					"/Users/Maxwell/.platformio/lib/MIDI Library/src",
+					"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src",
+					"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/HID/src",
+					"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/SPI/src",
+					"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src",
+					"/Users/Maxwell/.platformio/packages/framework-arduino-avr/libraries/Wire/src",
+					"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/include",
+					"/Users/Maxwell/Documents/PlatformIO/Projects/missed-opportunities/src",
+					"/Users/Maxwell/.platformio/packages/framework-arduino-avr/cores/arduino",
+					"/Users/Maxwell/.platformio/packages/framework-arduino-avr/variants/standard",
+					"/Users/Maxwell/.platformio/packages/tool-unity",
+					""
+				]
+			},
+			"defines": [
+				"PLATFORMIO=40304",
+				"ARDUINO_AVR_UNO",
+				"F_CPU=16000000L",
+				"ARDUINO_ARCH_AVR",
+				"ARDUINO=10808",
+				"__AVR_ATmega328P__",
+				""
+			],
+			"intelliSenseMode": "clang-x64",
+			"cStandard": "c11",
+			"cppStandard": "c++11",
+			"compilerPath": "/Users/Maxwell/.platformio/packages/toolchain-atmelavr/bin/avr-gcc",
+			"compilerArgs": ["-mmcu=atmega328p", ""]
+		}
+	],
+	"version": 4
 }
