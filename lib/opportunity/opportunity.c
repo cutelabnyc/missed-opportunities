@@ -8,7 +8,8 @@ void OP_init(opportunity_t *self,
              uint8_t num_channels,
              uint16_t v_max,
              uint8_t hysteresis,
-             uint16_t *densities)
+             uint16_t *densities,
+			 unsigned int random_seed)
 {
     // Allocates the number of channels
     self->channel = (channel_t *)malloc(sizeof(channel_t) * num_channels);
@@ -23,7 +24,7 @@ void OP_init(opportunity_t *self,
     self->num_channels = num_channels;
     self->v_max = v_max;
     self->hysteresis = hysteresis;
-    self->random_seed = RANDOM_SEED;
+    self->random_seed = random_seed;
 
     // Initialize each channel
     for (int i = 0; i < num_channels; i++)
@@ -41,7 +42,7 @@ void OP_init(opportunity_t *self,
     }
 
     // Initialize the random sequence by reseting seed
-    RESET_RANDOM_SEQUENCE(RANDOM_SEED);
+    RESET_RANDOM_SEQUENCE(random_seed);
 }
 
 void OP_destroy(opportunity_t *self)
