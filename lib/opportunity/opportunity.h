@@ -43,7 +43,8 @@ void OP_init(opportunity_t *self,
              uint8_t num_channels,
              uint16_t v_max,
              uint8_t hysteresis,
-             uint16_t *densities);
+             uint16_t *densities,
+			 unsigned int random_seed);
 
 /**
  * Frees the 'opportunity' struct
