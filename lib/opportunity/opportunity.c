@@ -1,8 +1,8 @@
-#include <opportunity.h>
 #include <stdlib.h>
+#include <opportunity.h>
 
-#define RESET_RANDOM_SEQUENCE(x) srand(x)
 #define RANDOM_SEED 42
+#define RESET_RANDOM_SEQUENCE(x) srand(x)
 
 void OP_init(opportunity_t *self,
              uint8_t num_channels,
@@ -13,6 +13,7 @@ void OP_init(opportunity_t *self,
     // Allocates the number of channels
     self->channel = (channel_t *)malloc(sizeof(channel_t) * num_channels);
     self->probability = (uint16_t *)malloc(sizeof(uint16_t) * num_channels);
+    self->default_densities = (uint16_t *)malloc(sizeof(uint16_t) * num_channels);
 
     // Initialize threshold and edge for reset seed inlet
     thresh_init(&self->_reset_thresh, (v_max / 2) - 1, hysteresis);
@@ -32,6 +33,10 @@ void OP_init(opportunity_t *self,
                 self->hysteresis,
                 self->random_seed);
 
+        // Save default densities for later use if probability inlet is used
+        self->default_densities[i] = densities[i];
+
+        // Set default densities as active probabilities
         self->probability[i] = densities[i];
     }
 
@@ -51,7 +56,7 @@ void OP_set_mock_random(opportunity_t *self, bool doMock)
         CH_set_mock_random(&self->channel[i], doMock);
 }
 
-static bool _OP_process_reset(opportunity_t *self, uint16_t *reset)
+static void _OP_process_reset(opportunity_t *self, uint16_t *reset)
 {
     // Threshold the input to +/- 2.5V
     uint16_t postThresh;
@@ -65,10 +70,26 @@ static bool _OP_process_reset(opportunity_t *self, uint16_t *reset)
     if (postEdge)
     {
         RESET_RANDOM_SEQUENCE(self->random_seed);
-        return 1;
+    }
+}
+
+static void _OP_process_density(opportunity_t *self, uint16_t *density, bool density_switch)
+{
+    // If a cable is plugged into the density jack
+    if (density_switch)
+    {
+        for (int i = 0; i < self->num_channels; i++)
+        {
+            self->probability[i] = *density;
+        }
     }
     else
-        return 0;
+    {
+        for (int i = 0; i < self->num_channels; i++)
+        {
+            self->probability[i] = self->default_densities[i];
+        }
+    }
 }
 
 static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *output)
@@ -84,12 +105,19 @@ static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *outpu
     }
 }
 
-void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t *reset)
+void OP_process(opportunity_t *self,
+                uint16_t *input,
+                uint16_t *output,
+                uint16_t *reset,
+                uint16_t *density,
+                bool density_switch)
 {
     // Process reset input
     _OP_process_reset(self, reset);
 
+    // Process density input
+    _OP_process_density(self, density, density_switch);
+
     // Process CV inputs
     _OP_process_CV(self, input, output);
-    //}
 }

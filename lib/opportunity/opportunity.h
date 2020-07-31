@@ -27,6 +27,8 @@ typedef struct opportunity
     t_thresh _reset_thresh;
     t_edge _reset_edge;
 
+    uint16_t *default_densities;
+
     uint8_t num_channels;
     uint16_t v_max;
     uint8_t hysteresis;
@@ -65,6 +67,11 @@ void OP_set_mock_random(opportunity_t *self, bool doMock);
  *
  * TODO: Add and describe parameters
  */
-void OP_process(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t *reset);
+void OP_process(opportunity_t *self,
+                uint16_t *input,
+                uint16_t *output,
+                uint16_t *reset,
+                uint16_t *density,
+                bool density_switch);
 
 #endif /* OPPORTUNITY_H */

@@ -35,7 +35,7 @@ void test_silence_op(void)
         0, 0, 0, 0};
     uint16_t random_reset[4] = {0, 0, 0, 0};
 
-    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, 4);
+    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, false, 4);
 }
 
 void test_one_crossing_op(void)
@@ -50,7 +50,7 @@ void test_one_crossing_op(void)
         0, 0, 0, 1};
     uint16_t random_reset[4] = {0, 0, 0, 0};
 
-    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, 4);
+    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, false, 4);
 }
 
 void test_hysteresis_op(void)
@@ -65,7 +65,7 @@ void test_hysteresis_op(void)
         0, 0, 0, 0, 0, 0, 1, 1};
     uint16_t random_reset[4] = {0, 0, 0, 0};
 
-    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, 8);
+    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, false, 8);
 }
 
 void test_seed_change(void)
@@ -79,19 +79,45 @@ void test_seed_change(void)
 
     // Reset seed at very end of sequence
     uint16_t reset_data[10] = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 800};
+
+    // Null density input
+    uint16_t density_data[10] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
     // Retrieve expected data
     for (int i = 0; i < 10; i++)
     {
-        OP_process(&self, &in_data[i], &exp_data[i], &reset_data[i]);
+        OP_process(&self, &in_data[i], &exp_data[i], &reset_data[i], &density_data[i], false);
     }
 
-    // Reset seed
-    RESET_SEED(self.random_seed);
-
     // Get same data from reseting the seed
-    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, reset_data, 10);
+    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, reset_data, NULL, false, 10);
+}
+
+void test_density_input(void)
+{
+    OP_init(&self, 1, 1023, 3, prob_densities);
+
+    uint16_t in_data[10] = {
+        800, 0, 800, 0, 800, 0, 800, 0, 800, 0};
+    uint16_t out_data[10];
+    uint16_t exp_data[10];
+
+    // Null reset data
+    uint16_t reset_data[10] = {
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 800};
+
+    // Density input data
+    uint16_t density_data[10] = {
+        300, 200, 0, 942, 1000, 22, 444, 330, 200, 0};
+
+    for (int i = 0; i < 10; i++)
+    {
+        OP_process(&self, &in_data[i], &exp_data[i], &reset_data[i], &density_data[i], true);
+    }
+
+    run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, reset_data, density_data, true, 10);
 }
 
 int main(int argc, char **argv)
@@ -101,6 +127,7 @@ int main(int argc, char **argv)
     RUN_TEST(test_one_crossing_op);
     RUN_TEST(test_hysteresis_op);
     RUN_TEST(test_seed_change);
+    RUN_TEST(test_density_input);
     UNITY_END();
 
     return 0;
