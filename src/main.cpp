@@ -12,6 +12,7 @@
  */
 
 #include "gpio.h"
+#include "limits.h"
 
 extern "C"
 {
@@ -38,10 +39,10 @@ static unsigned int makeRandomSeed()
 {
 	unsigned int out = 0;
 	buffer_t in[NUM_CHANNELS];
-	buffer_t *reset;
+	buffer_t reset;
 	unsigned int readBits = 0;
-	while (readBits < sizeof(unsigned int)) {
-		GPIO_read(&GPIO, &in, &reset);
+	while (readBits < CHAR_BIT * sizeof(unsigned int)) {
+		GPIO_read(&GPIO, in, &reset);
 		for (int i = 0; i < NUM_CHANNELS; i++) {
 			out = out << 1;
 			out = out | (in[i] & 1);
@@ -64,7 +65,6 @@ void setup()
   Serial.begin(9600);
 
   unsigned int random_seed = makeRandomSeed();
-  Serial.print(random_seed);
 
   OP_init(&opportunity,
           NUM_CHANNELS,
