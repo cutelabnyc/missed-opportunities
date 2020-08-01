@@ -5,10 +5,6 @@
  * place where the hardware [GPIO_t] and the code API [/lib/] go on
  * expensive and indulgent, yet rewarding dinner dates, noshing on
  * the signals served by [buffer_t CV_in/CV_out].
- *
- * NOTE: Might be worth eventually including a debugging argument
- * for use of the Serial monitor, if QA situations ever arose where
- * that was needed
  */
 
 #include "gpio.h"

@@ -9,7 +9,7 @@ void OP_init(opportunity_t *self,
              uint16_t v_max,
              uint8_t hysteresis,
              uint16_t *densities,
-			 unsigned int random_seed)
+             unsigned int random_seed)
 {
     // Allocates the number of channels
     self->channel = (channel_t *)malloc(sizeof(channel_t) * num_channels);
@@ -81,7 +81,8 @@ static void _OP_process_density(opportunity_t *self, uint16_t *density, bool den
     {
         for (int i = 0; i < self->num_channels; i++)
         {
-            self->probability[i] = *density;
+            if (self->channel[i]._edge._last != 1)
+                self->probability[i] = *density;
         }
     }
     else

@@ -4,7 +4,12 @@
 #include <stdint.h>
 #include <unity.h>
 
-typedef void (*processor_t)(void *handle, uint16_t *in, uint16_t *out, uint16_t *random_reset, uint16_t *density_input, bool density_switch);
+typedef void (*processor_t)(void *handle,
+                            uint16_t *in,
+                            uint16_t *out,
+                            uint16_t *random_reset,
+                            uint16_t *density_input,
+                            bool density_switch);
 
 void run_equality_test(
     void *handle,
