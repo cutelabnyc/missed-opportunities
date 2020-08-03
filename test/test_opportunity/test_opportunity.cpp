@@ -126,15 +126,15 @@ void test_autopulse(void)
 {
 	OP_init(&self, 1, 1023, 3, prob_densities, RANDOM_SEED);
 
-	const uint16_t SAMPLE_SIZE = 100;
-	uint16_t onCount = 0;
+	const uint16_t SAMPLE_SIZE = 100000;
+	uint16_t edgeCount = 0;
 
 	uint16_t in_data[SAMPLE_SIZE];
     uint16_t out_data[SAMPLE_SIZE];
     uint16_t reset_data[SAMPLE_SIZE];
-	uint16_t autopulse_out;
+	uint16_t autopulse_out, autopulse_last = 0;
 	uint16_t density = 0;
-	uint16_t msec = 2000;
+	uint16_t msec = 1;
 
 	for (uint16_t i = 0; i < SAMPLE_SIZE; i++) {
 		in_data[i] = 0;
@@ -144,11 +144,12 @@ void test_autopulse(void)
 	for (uint16_t i = 0; i < SAMPLE_SIZE; i++)
     {
         OP_process(&self, &in_data[i], &out_data[i], &reset_data[i], &density, &autopulse_out, msec,  true);
-		if (autopulse_out)
-			onCount++;
+		if (autopulse_last == 0 && autopulse_out > 0)
+			edgeCount++;
+		autopulse_last = autopulse_out;
     }
 
-	TEST_ASSERT_UINT16_WITHIN(20, SAMPLE_SIZE / 2, onCount);
+	TEST_ASSERT_UINT16_WITHIN(20, 50 / 2, edgeCount);
 }
 
 int main(int argc, char **argv)

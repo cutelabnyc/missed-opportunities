@@ -44,6 +44,7 @@ GPIO_t GPIO_init(void)
 
     pinMode(self.RESET, INPUT);
     pinMode(self.DENSITY, INPUT);
+	pinMode(self.PULSE_OUT, OUTPUT);
 
     return self;
 }

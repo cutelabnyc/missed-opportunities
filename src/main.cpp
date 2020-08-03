@@ -108,5 +108,7 @@ void loop()
 			 msec,
              DENSITY_switch);
 
-  GPIO_write(&GPIO, CV_out);
+	Serial.println(msec);
+
+  GPIO_write(&GPIO, CV_out, &AUTOPULSE_out);
 }
