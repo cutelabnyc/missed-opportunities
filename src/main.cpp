@@ -5,10 +5,6 @@
  * place where the hardware [GPIO_t] and the code API [/lib/] go on
  * expensive and indulgent, yet rewarding dinner dates, noshing on
  * the signals served by [buffer_t CV_in/CV_out].
- *
- * NOTE: Might be worth eventually including a debugging argument
- * for use of the Serial monitor, if QA situations ever arose where
- * that was needed
  */
 
 #include "gpio.h"
@@ -19,11 +15,6 @@ extern "C"
 #include "opportunity.h"
 }
 
-/**
- * BUG: Random seeds should be triggered by a hardware
- * input that initializes a random value from noise
- */
-
 opportunity_t opportunity;
 GPIO_t GPIO;
 
@@ -32,33 +23,37 @@ buffer_t CV_out[NUM_CHANNELS];
 
 uint16_t RESET_in;
 uint16_t DENSITY_in;
+<<<<<<< HEAD
 uint16_t AUTOPULSE_out;
 
 uint16_t lastMsec = 0;
-bool DENSITY_switch;
+== == == =
+
+>>>>>>> ch108/density-input
+			 bool DENSITY_switch;
 
 // TODO: Stash these probabilities in the hardware
 uint16_t default_densities[NUM_CHANNELS] = {511, 267, 150, 100};
 
 static unsigned int makeRandomSeed()
 {
-  unsigned int out = 0;
-  buffer_t in[NUM_CHANNELS];
-  uint16_t reset;
-  uint16_t density;
-  unsigned int readBits = 0;
-  while (readBits < CHAR_BIT * sizeof(unsigned int))
-  {
-    GPIO_read(&GPIO, in, &reset, &density);
-    for (int i = 0; i < NUM_CHANNELS; i++)
-    {
-      out = out << 1;
-      out = out | (in[i] & 1);
-      readBits++;
-    }
-  }
+	unsigned int out = 0;
+	buffer_t in[NUM_CHANNELS];
+	uint16_t reset;
+	uint16_t density;
+	unsigned int readBits = 0;
+	while (readBits < CHAR_BIT * sizeof(unsigned int))
+	{
+		GPIO_read(&GPIO, in, &reset, &density);
+		for (int i = 0; i < NUM_CHANNELS; i++)
+		{
+			out = out << 1;
+			out = out | (in[i] & 1);
+			readBits++;
+		}
+	}
 
-  return out;
+	return out;
 }
 
 /**
@@ -68,19 +63,19 @@ static unsigned int makeRandomSeed()
  */
 void setup()
 {
-  GPIO = GPIO_init();
+	GPIO = GPIO_init();
 
-  DENSITY_switch = true;
-  Serial.begin(9600);
+	DENSITY_switch = true;
+	Serial.begin(9600);
 
-  unsigned int random_seed = makeRandomSeed();
+	unsigned int random_seed = makeRandomSeed();
 
-  OP_init(&opportunity,
-          NUM_CHANNELS,
-          V_MAX,
-          HYSTERESIS,
-          default_densities,
-          random_seed);
+	OP_init(&opportunity,
+			NUM_CHANNELS,
+			V_MAX,
+			HYSTERESIS,
+			default_densities,
+			random_seed);
 }
 
 /**
@@ -93,20 +88,20 @@ void setup()
  */
 void loop()
 {
-  GPIO_read(&GPIO, CV_in, &RESET_in, &DENSITY_in);
+	GPIO_read(&GPIO, CV_in, &RESET_in, &DENSITY_in);
 
-  uint16_t time = millis();
-  uint16_t msec = time - lastMsec;
-  lastMsec = time;
+	uint16_t time = millis();
+	uint16_t msec = time - lastMsec;
+	lastMsec = time;
 
-  OP_process(&opportunity,
-             CV_in,
-             CV_out,
-             &RESET_in,
-             &DENSITY_in,
-			 &AUTOPULSE_out,
-			 msec,
-             DENSITY_switch);
+	OP_process(&opportunity,
+			   CV_in,
+			   CV_out,
+			   &RESET_in,
+			   &DENSITY_in,
+			   &AUTOPULSE_out,
+			   msec,
+			   DENSITY_switch);
 
-  GPIO_write(&GPIO, CV_out, &AUTOPULSE_out);
+	GPIO_write(&GPIO, CV_out, &AUTOPULSE_out);
 }

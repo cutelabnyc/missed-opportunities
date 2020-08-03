@@ -33,6 +33,8 @@ typedef struct opportunity
 
     uint16_t *default_densities;
 
+    uint16_t *default_densities;
+
     uint8_t num_channels;
     uint16_t v_max;
     uint8_t hysteresis;
@@ -77,8 +79,11 @@ void OP_process(opportunity_t *self,
                 uint16_t *output,
                 uint16_t *reset,
                 uint16_t *density,
+<<<<<<< HEAD
 				uint16_t *autopulse,
 				uint16_t msec,
+=======
+>>>>>>> ch108/density-input
                 bool density_switch);
 
 #endif /* OPPORTUNITY_H */

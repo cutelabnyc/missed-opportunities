@@ -1,18 +1,19 @@
 #
 # Performs CI tests upon pull request
 #
+
 language: python
 python:
-  - "2.7"
+    - "2.7"
 
 sudo: false
 cache:
-  directories:
-    - "~/.platformio"
+    directories:
+        - "~/.platformio"
 
 install:
-  - pip install -U platformio
-  - platformio update
+    - pip install -U platformio
+    - platformio update
 
 script:
-  - pio test -e native && pio run
+    - pio test -e native && pio run
