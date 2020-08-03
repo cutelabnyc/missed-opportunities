@@ -87,8 +87,12 @@ void test_seed_change(void)
     uint16_t density_data[10] = {
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-    // Retrieve expected data
+    // Retrieve expected data, twice, to make sure the seed is reset
     for (int i = 0; i < 10; i++)
+    {
+        OP_process(&self, &in_data[i], &exp_data[i], &reset_data[i], &density_data[i], &msec_register[i], fixed_msec, false);
+    }
+	for (int i = 0; i < 10; i++)
     {
         OP_process(&self, &in_data[i], &exp_data[i], &reset_data[i], &density_data[i], &msec_register[i], fixed_msec, false);
     }
@@ -126,30 +130,25 @@ void test_autopulse(void)
 {
 	OP_init(&self, 1, 1023, 3, prob_densities, RANDOM_SEED);
 
-	const uint16_t SAMPLE_SIZE = 100000;
+	const uint16_t SAMPLE_SIZE = 30000;
 	uint16_t edgeCount = 0;
 
-	uint16_t in_data[SAMPLE_SIZE];
-    uint16_t out_data[SAMPLE_SIZE];
-    uint16_t reset_data[SAMPLE_SIZE];
+	uint16_t in_data = 0;
+    uint16_t out_data = 0;
+    uint16_t reset_data = 0;
 	uint16_t autopulse_out, autopulse_last = 0;
 	uint16_t density = 0;
 	uint16_t msec = 1;
 
-	for (uint16_t i = 0; i < SAMPLE_SIZE; i++) {
-		in_data[i] = 0;
-		reset_data[i] = 0;
-	}
-
 	for (uint16_t i = 0; i < SAMPLE_SIZE; i++)
     {
-        OP_process(&self, &in_data[i], &out_data[i], &reset_data[i], &density, &autopulse_out, msec,  true);
+        OP_process(&self, &in_data, &out_data, &reset_data, &density, &autopulse_out, msec,  true);
 		if (autopulse_last == 0 && autopulse_out > 0)
 			edgeCount++;
 		autopulse_last = autopulse_out;
     }
 
-	TEST_ASSERT_UINT16_WITHIN(20, 50 / 2, edgeCount);
+	TEST_ASSERT_UINT16_WITHIN(20, (SAMPLE_SIZE * msec) / (2000), edgeCount);
 }
 
 int main(int argc, char **argv)

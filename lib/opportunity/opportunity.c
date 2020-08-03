@@ -136,6 +136,8 @@ void OP_process(opportunity_t *self,
 	// Process the automatic pulsing
 	autopulse_process(&self->_autopulse, msec, autopulse);
 
+	*autopulse = (*autopulse > 0) ? self->v_max : 0;
+
     // Process CV inputs
     _OP_process_CV(self, input, output);
 }

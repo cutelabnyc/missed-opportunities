@@ -33,7 +33,8 @@ GPIO_t GPIO_init(void)
         {A2, A3, A4, A5}, // CV Ins
         {2, 3, 4, 5},     // CV Outs
         A1,               // Reset In
-        A0                // Density In
+        A0,               // Density In
+		6				  // Pulse out
     };
 
     for (int i = 0; i < NUM_CHANNELS; i++)
