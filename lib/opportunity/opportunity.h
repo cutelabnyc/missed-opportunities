@@ -15,7 +15,7 @@
 #include <cuteop.h>
 
 #define MIN_AUTO_PPS	(0.5)
-#define MAX_AUTO_PPS	(30)
+#define MAX_AUTO_PPS	(20)
 
 /**
  * opportunity_t: Module's main data structure
