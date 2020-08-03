@@ -23,14 +23,11 @@ buffer_t CV_out[NUM_CHANNELS];
 
 uint16_t RESET_in;
 uint16_t DENSITY_in;
-<<<<<<< HEAD
 uint16_t AUTOPULSE_out;
 
 uint16_t lastMsec = 0;
-== == == =
 
->>>>>>> ch108/density-input
-			 bool DENSITY_switch;
+bool DENSITY_switch;
 
 // TODO: Stash these probabilities in the hardware
 uint16_t default_densities[NUM_CHANNELS] = {511, 267, 150, 100};
@@ -65,7 +62,7 @@ void setup()
 {
 	GPIO = GPIO_init();
 
-	DENSITY_switch = true;
+	DENSITY_switch = true; // TODO: Add hardware density switch
 	Serial.begin(9600);
 
 	unsigned int random_seed = makeRandomSeed();

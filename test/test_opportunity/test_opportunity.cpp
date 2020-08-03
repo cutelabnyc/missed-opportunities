@@ -37,11 +37,7 @@ void test_silence_op(void)
 		0, 0, 0, 0};
 	uint16_t random_reset[4] = {0, 0, 0, 0};
 
-<<<<<<< HEAD
 	run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, msec_register, fixed_msec, false, 4);
-	== == == =
-				 run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, false, 4);
->>>>>>> ch108/density-input
 }
 
 void test_one_crossing_op(void)
@@ -56,11 +52,7 @@ void test_one_crossing_op(void)
 		0, 0, 0, 1};
 	uint16_t random_reset[4] = {0, 0, 0, 0};
 
-<<<<<<< HEAD
 	run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, msec_register, fixed_msec, false, 4);
-	== == == =
-				 run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, false, 4);
->>>>>>> ch108/density-input
 }
 
 void test_hysteresis_op(void)
@@ -75,11 +67,7 @@ void test_hysteresis_op(void)
 		0, 0, 0, 0, 0, 0, 1, 1};
 	uint16_t random_reset[4] = {0, 0, 0, 0};
 
-<<<<<<< HEAD
 	run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, msec_register, fixed_msec, false, 8);
-	== == == =
-				 run_equality_test(&self, (processor_t)OP_process, in_data, out_data, exp_data, random_reset, NULL, false, 8);
->>>>>>> ch108/density-input
 }
 
 void test_seed_change(void)

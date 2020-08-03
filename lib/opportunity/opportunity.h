@@ -14,8 +14,8 @@
 #include <stdbool.h>
 #include <cuteop.h>
 
-#define MIN_AUTO_PPS	(0.5)
-#define MAX_AUTO_PPS	(20)
+#define MIN_AUTO_PPS (0.5)
+#define MAX_AUTO_PPS (20)
 
 /**
  * opportunity_t: Module's main data structure
@@ -24,21 +24,19 @@
  */
 typedef struct opportunity
 {
-    channel_t *channel;    // Each individual I/O channel
-    uint16_t *probability; // Corresponding probabilities for each I/O channel
+	channel_t *channel;	   // Each individual I/O channel
+	uint16_t *probability; // Corresponding probabilities for each I/O channel
 
-    t_thresh _reset_thresh;
-    t_edge _reset_edge;
+	t_thresh _reset_thresh;
+	t_edge _reset_edge;
 	t_autopulse _autopulse;
 
-    uint16_t *default_densities;
+	uint16_t *default_densities;
 
-    uint16_t *default_densities;
-
-    uint8_t num_channels;
-    uint16_t v_max;
-    uint8_t hysteresis;
-    uint16_t random_seed;
+	uint8_t num_channels;
+	uint16_t v_max;
+	uint8_t hysteresis;
+	uint16_t random_seed;
 
 } opportunity_t;
 
@@ -48,10 +46,10 @@ typedef struct opportunity
  * TODO: Add and describe parameters
  */
 void OP_init(opportunity_t *self,
-             uint8_t num_channels,
-             uint16_t v_max,
-             uint8_t hysteresis,
-             uint16_t *densities,
+			 uint8_t num_channels,
+			 uint16_t v_max,
+			 uint8_t hysteresis,
+			 uint16_t *densities,
 			 unsigned int random_seed);
 
 /**
@@ -75,15 +73,12 @@ void OP_set_mock_random(opportunity_t *self, bool doMock);
  * TODO: Add and describe parameters
  */
 void OP_process(opportunity_t *self,
-                uint16_t *input,
-                uint16_t *output,
-                uint16_t *reset,
-                uint16_t *density,
-<<<<<<< HEAD
+				uint16_t *input,
+				uint16_t *output,
+				uint16_t *reset,
+				uint16_t *density,
 				uint16_t *autopulse,
 				uint16_t msec,
-=======
->>>>>>> ch108/density-input
-                bool density_switch);
+				bool density_switch);
 
 #endif /* OPPORTUNITY_H */
