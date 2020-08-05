@@ -20,6 +20,11 @@ void CH_set_mock_random(channel_t *self, bool doMock)
     random_set_mock(&self->_random, doMock);
 }
 
+void CH_reset_random(channel_t *self, uint16_t seed)
+{
+	random_reset(&self->_random, seed);
+}
+
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *prob,

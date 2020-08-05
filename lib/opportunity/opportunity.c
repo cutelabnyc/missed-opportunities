@@ -2,7 +2,14 @@
 #include <stdlib.h>
 
 #define RESET_RANDOM_SEQUENCE(x) srand(x)
-#define RANDOM_SEED 42
+
+static void _reset_random_sequence(opportunity_t *self, uint16_t random_seed)
+{
+	for (int i = 0; i < self->num_channels; i++)
+    {
+		CH_reset_random(self->channel + i, random_seed);
+	}
+}
 
 void OP_init(opportunity_t *self,
              uint8_t num_channels,
@@ -43,7 +50,7 @@ void OP_init(opportunity_t *self,
     }
 
     // Initialize the random sequence by reseting seed
-    RESET_RANDOM_SEQUENCE(random_seed);
+    _reset_random_sequence(self, random_seed);
 }
 
 void OP_destroy(opportunity_t *self)
@@ -71,7 +78,7 @@ static void _OP_process_reset(opportunity_t *self, uint16_t *reset)
     // // Reset random value sequence if an edge is detected from reset inlet
     if (postEdge)
     {
-        RESET_RANDOM_SEQUENCE(self->random_seed);
+		_reset_random_sequence(self, self->random_seed);
     }
 }
 

@@ -70,7 +70,7 @@ void setup()
 {
   GPIO = GPIO_init();
 
-  DENSITY_switch = true;
+  DENSITY_switch = false;
   Serial.begin(9600);
 
   unsigned int random_seed = makeRandomSeed();

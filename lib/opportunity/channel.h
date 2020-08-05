@@ -53,6 +53,13 @@ void CH_destroy(channel_t *self);
 void CH_set_mock_random(channel_t *self, bool doMock);
 
 /**
+ * Reset the random seed for the channel
+ *
+ * seed - the random seed
+ */
+void CH_reset_random(channel_t *self, uint16_t seed);
+
+/**
  * Process a single element in the incoming [buffer_t] array
  * in main.cpp
  *
