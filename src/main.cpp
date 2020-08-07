@@ -64,6 +64,7 @@ void setup()
   OP_init(&opportunity,
           NUM_CHANNELS,
           V_MAX,
+		  V_CUTOFF,
           HYSTERESIS,
           random_seed);
 }

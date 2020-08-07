@@ -18,7 +18,7 @@ uint16_t msec_register[32];
 void setUp(void)
 {
     // set stuff up here
-    OP_init(&self, 1, 1023, 0, RANDOM_SEED);
+    OP_init(&self, 1, 1023, 511, 0, RANDOM_SEED);
     OP_set_mock_random(&self, true);
 }
 
@@ -45,7 +45,7 @@ void test_silence_op(void)
 
 void test_one_crossing_op(void)
 {
-    OP_init(&self, 1, 1023, 0, RANDOM_SEED);
+    OP_init(&self, 1, 1023, 511, 0, prob_densities, RANDOM_SEED);
     OP_set_mock_random(&self, true);
 
     uint16_t in_data[4] = {
@@ -62,7 +62,7 @@ void test_one_crossing_op(void)
 
 void test_hysteresis_op(void)
 {
-    OP_init(&self, 1, 1023, 3, RANDOM_SEED);
+    OP_init(&self, 1, 1023, 511, 3, RANDOM_SEED);
     OP_set_mock_random(&self, true);
 
     uint16_t in_data[8] = {
@@ -79,7 +79,7 @@ void test_hysteresis_op(void)
 
 void test_seed_change(void)
 {
-    OP_init(&self, 1, 1023, 3, RANDOM_SEED);
+    OP_init(&self, 1, 1023, 511, 3, RANDOM_SEED);
 
     uint16_t in_data[10] = {
         800, 0, 800, 0, 800, 0, 800, 0, 800, 0};
@@ -110,7 +110,7 @@ void test_seed_change(void)
 
 void test_density_input(void)
 {
-    OP_init(&self, 1, 1023, 3, RANDOM_SEED);
+    OP_init(&self, 1, 1023, 511, 3, RANDOM_SEED);
 
     uint16_t in_data[10] = {
         800, 0, 800, 0, 800, 0, 800, 0, 800, 0};
@@ -135,7 +135,7 @@ void test_density_input(void)
 
 void test_autopulse(void)
 {
-    OP_init(&self, 1, 1023, 3, RANDOM_SEED);
+    OP_init(&self, 1, 1023, 511, 3, RANDOM_SEED);
 
     const uint16_t SAMPLE_SIZE = 30000;
     uint16_t edgeCount = 0;

@@ -1,13 +1,13 @@
 #include <channel.h>
 #include <time.h>
 
-void CH_init(channel_t *self, uint16_t v_max, uint16_t hysteresis, uint16_t random_seed)
+void CH_init(channel_t *self, uint16_t v_max, uint16_t v_cutoff, uint16_t hysteresis, uint16_t random_seed)
 {
-    thresh_init(&self->_input_thresh, (v_max / 2) - 1, hysteresis);
+    thresh_init(&self->_input_thresh, v_cutoff, hysteresis);
     random_init(&self->_random, random_seed);
     gate_init(&self->_gate);
     edge_init(&self->_edge);
-    thresh_init(&self->_random_thresh, (v_max / 2) - 1, 0);
+    thresh_init(&self->_random_thresh, v_cutoff, 0);
 }
 
 void CH_destroy(channel_t *self)
