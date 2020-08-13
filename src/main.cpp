@@ -5,10 +5,6 @@
  * place where the hardware [GPIO_t] and the code API [/lib/] go on
  * expensive and indulgent, yet rewarding dinner dates, noshing on
  * the signals served by [buffer_t CV_in/CV_out].
- *
- * NOTE: Might be worth eventually including a debugging argument
- * for use of the Serial monitor, if QA situations ever arose where
- * that was needed
  */
 
 #include "gpio.h"
@@ -18,11 +14,6 @@ extern "C"
 {
 #include "opportunity.h"
 }
-
-/**
- * BUG: Random seeds should be triggered by a hardware
- * input that initializes a random value from noise
- */
 
 opportunity_t opportunity;
 GPIO_t GPIO;
@@ -35,10 +26,6 @@ uint16_t DENSITY_in;
 uint16_t AUTOPULSE_out;
 
 uint16_t lastMsec = 0;
-bool DENSITY_switch;
-
-// TODO: Stash these probabilities in the hardware
-uint16_t default_densities[NUM_CHANNELS] = {511, 267, 150, 100};
 
 static unsigned int makeRandomSeed()
 {
@@ -70,7 +57,6 @@ void setup()
 {
   GPIO = GPIO_init();
 
-  DENSITY_switch = false;
   Serial.begin(9600);
 
   unsigned int random_seed = makeRandomSeed();
@@ -79,7 +65,6 @@ void setup()
           NUM_CHANNELS,
           V_MAX,
           HYSTERESIS,
-          default_densities,
           random_seed);
 }
 
@@ -104,9 +89,8 @@ void loop()
              CV_out,
              &RESET_in,
              &DENSITY_in,
-			 &AUTOPULSE_out,
-			 msec,
-             DENSITY_switch);
+             &AUTOPULSE_out,
+             msec);
 
   GPIO_write(&GPIO, CV_out, &AUTOPULSE_out);
 }

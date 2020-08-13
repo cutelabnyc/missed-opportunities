@@ -14,8 +14,8 @@
 #include <stdbool.h>
 #include <cuteop.h>
 
-#define MIN_AUTO_PPS	(0.5)
-#define MAX_AUTO_PPS	(20)
+#define MIN_AUTO_PPS (0.5)
+#define MAX_AUTO_PPS (20)
 
 /**
  * opportunity_t: Module's main data structure
@@ -29,9 +29,9 @@ typedef struct opportunity
 
     t_thresh _reset_thresh;
     t_edge _reset_edge;
-	t_autopulse _autopulse;
+    t_autopulse _autopulse;
 
-    uint16_t *default_densities;
+    uint16_t *density;
 
     uint8_t num_channels;
     uint16_t v_max;
@@ -49,8 +49,7 @@ void OP_init(opportunity_t *self,
              uint8_t num_channels,
              uint16_t v_max,
              uint8_t hysteresis,
-             uint16_t *densities,
-			 unsigned int random_seed);
+             unsigned int random_seed);
 
 /**
  * Frees the 'opportunity' struct
@@ -77,8 +76,7 @@ void OP_process(opportunity_t *self,
                 uint16_t *output,
                 uint16_t *reset,
                 uint16_t *density,
-				uint16_t *autopulse,
-				uint16_t msec,
-                bool density_switch);
+                uint16_t *autopulse,
+                uint16_t msec);
 
 #endif /* OPPORTUNITY_H */
