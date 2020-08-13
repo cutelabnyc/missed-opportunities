@@ -23,9 +23,6 @@ void OP_init(opportunity_t *self,
     self->channel = (channel_t *)malloc(sizeof(channel_t) * num_channels);
     self->probability = (uint16_t *)malloc(sizeof(uint16_t) * num_channels);
 
-    // NOTE: We might not need this density variable
-    self->density = (uint16_t *)malloc(sizeof(uint16_t) * num_channels);
-
     // Initialize threshold and edge for reset seed inlet
     thresh_init(&self->_reset_thresh, (v_max / 2) - 1, hysteresis);
     edge_init(&self->_reset_edge);
@@ -44,9 +41,6 @@ void OP_init(opportunity_t *self,
                 self->v_max,
                 self->hysteresis,
                 self->random_seed);
-
-        // Initialize density values
-        self->density[i] = 0;
 
         // Initialize probability values
         self->probability[i] = 0;
@@ -97,16 +91,17 @@ static void _OP_process_density(opportunity_t *self, uint16_t *density)
     {
         if (self->channel[i]._edge._last != 1)
         {
-            uint16_t probability = DENSITY_THRESHOLD / (i + 1);
+            uint16_t base_probability = DENSITY_THRESHOLD / (i + 1);
 
-            if (*density < DENSITY_THRESHOLD)
+            if (*density < 716)
             {
-                self->probability[i] = probability * (*density / probability);
+                self->probability[i] = base_probability * (*density / DENSITY_THRESHOLD);
             }
             else
             {
-                uint16_t remainder = (DENSITY_RANGE - probability);
-                self->probability[i] = probability + remainder * (DENSITY_RANGE - *density / remainder);
+                float slope = (DENSITY_RANGE - base_probability) / (DENSITY_RANGE - DENSITY_THRESHOLD);
+                float x = *density - DENSITY_THRESHOLD;
+                self->probability[i] = base_probability + x * slope;
             }
         }
     }
