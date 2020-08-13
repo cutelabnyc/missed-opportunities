@@ -31,8 +31,6 @@ typedef struct opportunity
     t_edge _reset_edge;
     t_autopulse _autopulse;
 
-    uint16_t *density;
-
     uint8_t num_channels;
     uint16_t v_max;
     uint8_t hysteresis;

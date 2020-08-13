@@ -83,10 +83,6 @@ static void _OP_process_density(opportunity_t *self, uint16_t *density)
 {
     uint16_t autopulseDensity;
 
-    // ANCHOR: If the density is greater than the lack of voltage
-    // set densities based off of default value, else set densities
-    // based off of incoming value
-
     for (int i = 0; i < self->num_channels; i++)
     {
         if (self->channel[i]._edge._last != 1)
