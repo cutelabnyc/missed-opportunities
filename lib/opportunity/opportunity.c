@@ -26,7 +26,6 @@ void OP_init(opportunity_t *self,
 
     // Initialize threshold and edge for reset seed inlet
     thresh_init(&self->_reset_thresh, v_cutoff, hysteresis);
-    edge_init(&self->_reset_edge);
     autopulse_init(&self->_autopulse);
 
     // Sets all the default values from [/include/globals.h]
@@ -71,12 +70,8 @@ static void _OP_process_reset(opportunity_t *self, uint16_t *reset)
     uint16_t postThresh;
     thresh_process(&self->_reset_thresh, reset, &postThresh);
 
-    // // Convert to 0 -> 1 transition
-    uint16_t postEdge;
-    edge_process(&self->_reset_edge, &postThresh, &postEdge);
-
     // // Reset random value sequence if an edge is detected from reset inlet
-    if (postEdge)
+    if (postThresh)
     {
         _reset_random_sequence(self, self->random_seed);
     }

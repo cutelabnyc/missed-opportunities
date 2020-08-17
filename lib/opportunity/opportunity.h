@@ -28,7 +28,6 @@ typedef struct opportunity
     uint16_t *probability; // Corresponding probabilities for each I/O channel
 
     t_thresh _reset_thresh;
-    t_edge _reset_edge;
     t_autopulse _autopulse;
 
     uint8_t num_channels;

@@ -45,7 +45,7 @@ void test_silence_op(void)
 
 void test_one_crossing_op(void)
 {
-    OP_init(&self, 1, 1023, 511, 0, prob_densities, RANDOM_SEED);
+    OP_init(&self, 1, 1023, 511, 0, RANDOM_SEED);
     OP_set_mock_random(&self, true);
 
     uint16_t in_data[4] = {
