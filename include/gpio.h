@@ -21,7 +21,7 @@ typedef struct GPIO
     pin_t OUT[NUM_CHANNELS];
     pin_t RESET;
     pin_t DENSITY;
-	pin_t PULSE_OUT;
+    pin_t PULSE_OUT;
 } GPIO_t;
 
 /**
@@ -30,11 +30,11 @@ typedef struct GPIO
 GPIO_t GPIO_init(void)
 {
     GPIO_t self = {
-        {A2, A3, A4, A5}, // CV Ins
-        {2, 3, 4, 5},     // CV Outs
-        A1,               // Reset In
-        A0,               // Density In
-		6				  // Pulse out
+        {A4, A5, A2, A3}, // CV Ins
+        {2, 3, 8, 9},     // CV Outs
+        A0,               // Reset In
+        A1,               // Density In
+        5                 // Pulse out
     };
 
     for (int i = 0; i < NUM_CHANNELS; i++)
@@ -45,7 +45,7 @@ GPIO_t GPIO_init(void)
 
     pinMode(self.RESET, INPUT);
     pinMode(self.DENSITY, INPUT);
-	pinMode(self.PULSE_OUT, OUTPUT);
+    pinMode(self.PULSE_OUT, OUTPUT);
 
     return self;
 }
@@ -73,5 +73,5 @@ void GPIO_write(GPIO_t *self, uint16_t *out, uint16_t *pulse_out)
         digitalWrite(self->OUT[i], out[i]);
     }
 
-	digitalWrite(self->PULSE_OUT, *pulse_out);
+    digitalWrite(self->PULSE_OUT, *pulse_out);
 }
