@@ -16,7 +16,7 @@ static void _reset_random_sequence(opportunity_t *self, uint16_t random_seed)
 void OP_init(opportunity_t *self,
              uint8_t num_channels,
              uint16_t v_max,
-			 uint16_t v_cutoff,
+             uint16_t v_cutoff,
              uint8_t hysteresis,
              unsigned int random_seed)
 {
@@ -31,7 +31,7 @@ void OP_init(opportunity_t *self,
     // Sets all the default values from [/include/globals.h]
     self->num_channels = num_channels;
     self->v_max = v_max;
-	self->v_cutoff = v_cutoff;
+    self->v_cutoff = v_cutoff;
     self->hysteresis = hysteresis;
     self->random_seed = random_seed;
 
@@ -40,7 +40,7 @@ void OP_init(opportunity_t *self,
     {
         CH_init(&self->channel[i],
                 self->v_max,
-				v_cutoff,
+                v_cutoff,
                 self->hysteresis,
                 self->random_seed);
 

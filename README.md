@@ -46,13 +46,3 @@ pio run --target upload --target monitor
 ```
 
 After pull requesting, Travis CI will make sure that the code is able to compile and perform integration testing in order to make sure everything is squeaky clean before merging
-
-## Notes
-
-General To-Dos:
-
--   Make sure CI cycle is working
--   Structure a basic outline from diagram on new branch
--   Write unit tests and integration tests
-    1. Add a unit test for a full input range on the atmega's analogIn function (0-1023)
--   Structure the main loop to integrate a debugging mode where the Serial monitor is turned on

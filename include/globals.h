@@ -7,6 +7,7 @@
 #include <time.h>
 
 #define NUM_CHANNELS ((uint8_t)4)
+#define NUM_LEDS 2
 #define V_MAX ((uint16_t)1023)
 #define HYSTERESIS ((uint8_t)3)
 #define V_CUTOFF ((uint16_t)200)

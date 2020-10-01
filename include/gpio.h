@@ -22,6 +22,8 @@ typedef struct GPIO
     pin_t RESET;
     pin_t DENSITY;
     pin_t PULSE_OUT;
+    pin_t LEDS[NUM_LEDS];
+
 } GPIO_t;
 
 /**
@@ -30,11 +32,12 @@ typedef struct GPIO
 GPIO_t GPIO_init(void)
 {
     GPIO_t self = {
-        {A4, A5, A2, A3}, // CV Ins
-        {2, 3, 8, 9},     // CV Outs
-        A0,               // Reset In
-        A1,               // Density In
-        5                 // Pulse out
+        {A4, A5, A2, A3}, // CV Ins -- AD4, AD5, AD2, AD3
+        {2, 3, 8, 9},     // CV Outs -- PD2, PD3, PB0, PB1
+        A0,               // Reset In -- AD0
+        A1,               // Density In -- AD1
+        5,                // Pulse out -- PD5
+        {7, 6}            // Reset and Density LEDs -- PD7, PD6
     };
 
     for (int i = 0; i < NUM_CHANNELS; i++)
@@ -46,6 +49,11 @@ GPIO_t GPIO_init(void)
     pinMode(self.RESET, INPUT);
     pinMode(self.DENSITY, INPUT);
     pinMode(self.PULSE_OUT, OUTPUT);
+
+    for (int i = 0; i < NUM_LEDS; i++)
+    {
+        pinMode(self.LEDS[i], OUTPUT);
+    }
 
     return self;
 }
@@ -61,6 +69,11 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reset, uint16_t *density)
     }
     *reset = analogRead(self->RESET);
     *density = analogRead(self->DENSITY);
+
+    // TODO: LEDs are read directly from function
+    // scope variables, should be something different :(
+    analogWrite(self->LEDS[0], *reset);
+    analogWrite(self->LEDS[1], *density);
 }
 
 /**
