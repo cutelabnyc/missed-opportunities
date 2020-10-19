@@ -72,8 +72,8 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reset, uint16_t *density)
 
     // TODO: LEDs are read directly from function
     // scope variables, should be something different :(
-    analogWrite(self->LEDS[0], *reset);
-    analogWrite(self->LEDS[1], *density);
+    analogWrite(self->LEDS[0], *reset / 4);
+    analogWrite(self->LEDS[1], *density / 4);
 }
 
 /**
