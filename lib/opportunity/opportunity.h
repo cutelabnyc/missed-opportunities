@@ -76,6 +76,7 @@ void OP_process(opportunity_t *self,
                 uint16_t *reset,
                 uint16_t *density,
                 uint16_t *autopulse,
+                uint16_t *missed_opportunities,
                 uint16_t msec);
 
 #endif /* OPPORTUNITY_H */

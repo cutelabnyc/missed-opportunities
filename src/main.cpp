@@ -20,6 +20,7 @@ GPIO_t GPIO;
 
 buffer_t CV_in[NUM_CHANNELS];
 buffer_t CV_out[NUM_CHANNELS];
+buffer_t MISSED_opportunities[NUM_CHANNELS - 1];
 
 uint16_t RESET_in;
 uint16_t DENSITY_in;
@@ -64,7 +65,7 @@ void setup()
   OP_init(&opportunity,
           NUM_CHANNELS,
           V_MAX,
-		  V_CUTOFF,
+		      V_CUTOFF,
           HYSTERESIS,
           random_seed);
 }
@@ -91,7 +92,8 @@ void loop()
              &RESET_in,
              &DENSITY_in,
              &AUTOPULSE_out,
+             MISSED_opportunities,
              msec);
 
-  GPIO_write(&GPIO, CV_out, &AUTOPULSE_out);
+  GPIO_write(&GPIO, CV_out, &AUTOPULSE_out, MISSED_opportunities);
 }

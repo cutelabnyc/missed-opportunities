@@ -107,7 +107,7 @@ static void _OP_process_density(opportunity_t *self, uint16_t *density)
     autopulse_set_pulses_per_second(&self->_autopulse, scaleFactor * autopulseRange + MIN_AUTO_PPS);
 }
 
-static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *output)
+static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t *missed_opportunities)
 {
     // Cycles through the channels and processes the CV sent to each channel
     for (int i = 0; i < self->num_channels; i++)
@@ -116,7 +116,8 @@ static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *outpu
         CH_process(&self->channel[i],
                    &input[i],
                    &self->probability[i],
-                   &output[i]);
+                   &output[i],
+                   i < self->num_channels - 1 ? &missed_opportunities[i] : NULL);
     }
 }
 
@@ -126,6 +127,7 @@ void OP_process(opportunity_t *self,
                 uint16_t *reset,
                 uint16_t *density,
                 uint16_t *autopulse,
+                uint16_t *missed_opportunities,
                 uint16_t msec)
 {
     // Process reset input
@@ -140,5 +142,5 @@ void OP_process(opportunity_t *self,
     *autopulse = (*autopulse > 0) ? self->v_max : 0;
 
     // Process CV inputs
-    _OP_process_CV(self, input, output);
+    _OP_process_CV(self, input, output, missed_opportunities);
 }

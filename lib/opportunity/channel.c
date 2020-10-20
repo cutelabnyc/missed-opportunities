@@ -28,7 +28,8 @@ void CH_reset_random(channel_t *self, uint16_t seed)
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *prob,
-                uint16_t *out)
+                uint16_t *out,
+                uint16_t *missed_opportunities)
 {
     // Threshold the input to +/- 2.5V
     uint16_t postThresh;
@@ -49,4 +50,11 @@ void CH_process(channel_t *self,
 
     // // Gate the output accordingly
     gate_process(&self->_gate, &postThresh, &postRandomThresh, out);
+
+    // // Gate the Missed Opportunities
+    if (missed_opportunities != NULL)
+    {
+        uint16_t missedThresh = !(postRandomThresh);
+        gate_process(&self->_gate, &postThresh, &missedThresh, missed_opportunities);
+    }
 }

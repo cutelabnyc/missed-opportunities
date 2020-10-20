@@ -23,6 +23,7 @@ typedef struct GPIO
     pin_t DENSITY;
     pin_t PULSE_OUT;
     pin_t LEDS[NUM_LEDS];
+    pin_t MISSED_OPPORTUNITIES[NUM_CHANNELS - 1];
 
 } GPIO_t;
 
@@ -37,7 +38,8 @@ GPIO_t GPIO_init(void)
         A0,               // Reset In -- AD0
         A1,               // Density In -- AD1
         5,                // Pulse out -- PD5
-        {7, 6}            // Reset and Density LEDs -- PD7, PD6
+        {7, 6},           // Reset and Density LEDs -- PD7, PD6,
+        {4, 10, 11}       // "Missed" Opportunities —- PD4, PB2, PB3
     };
 
     for (int i = 0; i < NUM_CHANNELS; i++)
@@ -53,6 +55,11 @@ GPIO_t GPIO_init(void)
     for (int i = 0; i < NUM_LEDS; i++)
     {
         pinMode(self.LEDS[i], OUTPUT);
+    }
+
+    for (int i = 0; i < NUM_CHANNELS - 1; i++)
+    {
+        pinMode(self.MISSED_OPPORTUNITIES[i], OUTPUT);
     }
 
     return self;
@@ -79,11 +86,17 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reset, uint16_t *density)
 /**
  * Writes data to all outputs
  */
-void GPIO_write(GPIO_t *self, uint16_t *out, uint16_t *pulse_out)
+void GPIO_write(GPIO_t *self, uint16_t *out, uint16_t *pulse_out, uint16_t* missed_opportunities)
 {
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
+        // Write the channels
         digitalWrite(self->OUT[i], out[i]);
+        
+        // Write the Missed Opportunities
+        if(i < NUM_CHANNELS - 1){
+            digitalWrite(self->MISSED_OPPORTUNITIES[i], missed_opportunities[i]);
+        }
     }
 
     digitalWrite(self->PULSE_OUT, *pulse_out);

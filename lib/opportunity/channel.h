@@ -68,6 +68,7 @@ void CH_reset_random(channel_t *self, uint16_t seed);
 void CH_process(channel_t *self,
                 uint16_t *in,
                 uint16_t *prob,
-                uint16_t *out);
+                uint16_t *out,
+                uint16_t *missed_opportunities);
 
 #endif /* CHANNEL_H */
