@@ -14,8 +14,8 @@
 #include <stdbool.h>
 #include <cuteop.h>
 
-#define MIN_AUTO_PPS (0.5)
-#define MAX_AUTO_PPS (20)
+#define MIN_AUTO_PPS (11)
+#define MAX_AUTO_PPS (9)
 
 /**
  * opportunity_t: Module's main data structure
@@ -35,6 +35,7 @@ typedef struct opportunity
 	uint16_t v_cutoff;
     uint8_t hysteresis;
     uint16_t random_seed;
+	bool reset_high;
 
 } opportunity_t;
 

@@ -103,7 +103,9 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reset, uint16_t *density, u
     analogWrite(self->LEDS[0], *reset / 4);
 
 	// analogWrite(self->LEDS[0], *mismatch ? 255 : 0);
-    analogWrite(self->LEDS[1], *density / 4);
+    // analogWrite(self->LEDS[1], *density / 32);
+	double dreg = (*density / 4) / 255.0;
+	analogWrite(self->LEDS[1], (uint16_t) (dreg * dreg * dreg * 255));
 
     // analogWrite(self->LEDS[0], 255);
     // analogWrite(self->LEDS[1], 255);

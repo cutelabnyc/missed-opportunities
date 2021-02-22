@@ -7,6 +7,7 @@
 
 static void _reset_random_sequence(opportunity_t *self, uint16_t random_seed)
 {
+	autopulse_reset(&self->_autopulse, random_seed);
     for (int i = 0; i < self->num_channels; i++)
     {
         CH_reset_random(self->channel + i, random_seed);
@@ -26,7 +27,8 @@ void OP_init(opportunity_t *self,
 
     // Initialize threshold and edge for reset seed inlet
     thresh_init(&self->_reset_thresh, v_cutoff, hysteresis);
-    autopulse_init(&self->_autopulse);
+    autopulse_init(&self->_autopulse, random_seed);
+	autopulse_set_minimum_interval(&self->_autopulse, 25);
 
     // Sets all the default values from [/include/globals.h]
     self->num_channels = num_channels;
@@ -34,6 +36,7 @@ void OP_init(opportunity_t *self,
     self->v_cutoff = v_cutoff;
     self->hysteresis = hysteresis;
     self->random_seed = random_seed;
+	self->reset_high = false;
 
     // Initialize each channel
     for (int i = 0; i < num_channels; i++)
@@ -71,10 +74,12 @@ static void _OP_process_reset(opportunity_t *self, uint16_t *reset)
     thresh_process(&self->_reset_thresh, reset, &postThresh);
 
     // // Reset random value sequence if an edge is detected from reset inlet
-    if (postThresh)
+    if (postThresh && !self->reset_high)
     {
         _reset_random_sequence(self, self->random_seed);
     }
+
+	self->reset_high = postThresh;
 }
 
 static void _OP_process_density(opportunity_t *self, uint16_t *density)
