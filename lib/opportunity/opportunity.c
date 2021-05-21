@@ -1,5 +1,6 @@
 #include <opportunity.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define RESET_RANDOM_SEQUENCE(x) srand(x)
 #define DENSITY_RANGE 1023
@@ -86,24 +87,16 @@ static void _OP_process_density(opportunity_t *self, uint16_t *density)
 {
     uint16_t autopulseDensity;
 
-    for (int i = 0; i < self->num_channels; i++)
+	float base_probability = ((float) *density) / (float) DENSITY_RANGE;
+	uint16_t scaled_probability = powf(base_probability, 0.75) * DENSITY_RANGE;
+
+	for (int i = 0; i < self->num_channels; i++)
     {
         if (self->channel[i]._edge._last != 1)
         {
-            uint16_t base_probability = DENSITY_THRESHOLD / (i + 1);
-
-            if (*density < 716)
-            {
-                self->probability[i] = base_probability * (*density / DENSITY_THRESHOLD);
-            }
-            else
-            {
-                float slope = (DENSITY_RANGE - base_probability) / (DENSITY_RANGE - DENSITY_THRESHOLD);
-                float x = *density - DENSITY_THRESHOLD;
-                self->probability[i] = base_probability + x * slope;
-            }
-        }
-    }
+			self->probability[i] = scaled_probability;
+		}
+	}
 
     autopulseDensity = *density;
 
