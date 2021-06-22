@@ -16,6 +16,9 @@
 
 #define MIN_AUTO_PPS (11)
 #define MAX_AUTO_PPS (9)
+#define CRAZY_AUTO_PPS (15)
+#define AUTO_PPS_ROLLOFF_LOW (0.1)
+#define AUTO_PPS_ROLLOFF_HIGH (0.9)
 
 /**
  * opportunity_t: Module's main data structure

@@ -6,12 +6,13 @@
 #define DENSITY_RANGE 1023
 #define DENSITY_THRESHOLD (DENSITY_RANGE * 0.70)
 
-static void _reset_random_sequence(opportunity_t *self, uint16_t random_seed)
+static void _reset_random_sequence(opportunity_t *self, uint16_t random_seed, bool doResetAutopulse)
 {
-	autopulse_reset(&self->_autopulse, random_seed);
+	if (doResetAutopulse)
+		autopulse_reset(&self->_autopulse, random_seed);
     for (int i = 0; i < self->num_channels; i++)
     {
-        CH_reset_random(self->channel + i, random_seed);
+        CH_reset_random(self->channel + i, random_seed + i);
     }
 }
 
@@ -53,7 +54,7 @@ void OP_init(opportunity_t *self,
     }
 
     // Initialize the random sequence by reseting seed
-    _reset_random_sequence(self, random_seed);
+    _reset_random_sequence(self, random_seed, true);
 }
 
 void OP_destroy(opportunity_t *self)
@@ -75,9 +76,10 @@ static void _OP_process_reset(opportunity_t *self, uint16_t *reset)
     thresh_process(&self->_reset_thresh, reset, &postThresh);
 
     // // Reset random value sequence if an edge is detected from reset inlet
-    if (postThresh && !self->reset_high)
+    // if (postThresh && !self->reset_high)
+	if (postThresh)
     {
-        _reset_random_sequence(self, self->random_seed);
+        _reset_random_sequence(self, self->random_seed, !self->reset_high);
     }
 
 	self->reset_high = postThresh;
@@ -100,9 +102,23 @@ static void _OP_process_density(opportunity_t *self, uint16_t *density)
 
     autopulseDensity = *density;
 
-    double autopulseRange = (MAX_AUTO_PPS - MIN_AUTO_PPS);
     double scaleFactor = (double)autopulseDensity / (double)self->v_max;
-    autopulse_set_pulses_per_second(&self->_autopulse, scaleFactor * autopulseRange + MIN_AUTO_PPS);
+	double autopulseRange;
+	double autopulseOffset;
+	if (scaleFactor < AUTO_PPS_ROLLOFF_LOW) {
+		autopulseRange = (MIN_AUTO_PPS - 0);
+		scaleFactor /= AUTO_PPS_ROLLOFF_LOW;
+		autopulseOffset = 0;
+	} else if (scaleFactor > AUTO_PPS_ROLLOFF_HIGH) {
+		autopulseRange = (CRAZY_AUTO_PPS - MAX_AUTO_PPS);
+		scaleFactor = (scaleFactor - AUTO_PPS_ROLLOFF_HIGH) / (1.0 - AUTO_PPS_ROLLOFF_HIGH);
+		autopulseOffset = MAX_AUTO_PPS;
+	} else {
+		autopulseRange = (MAX_AUTO_PPS - MIN_AUTO_PPS);
+		scaleFactor = (scaleFactor - AUTO_PPS_ROLLOFF_LOW) / (1.0 - (AUTO_PPS_ROLLOFF_HIGH - AUTO_PPS_ROLLOFF_LOW));
+		autopulseOffset = MIN_AUTO_PPS;
+	}
+    autopulse_set_pulses_per_second(&self->_autopulse, scaleFactor * autopulseRange + autopulseOffset);
 }
 
 static void _OP_process_CV(opportunity_t *self, uint16_t *input, uint16_t *output, uint16_t *missed_opportunities)
