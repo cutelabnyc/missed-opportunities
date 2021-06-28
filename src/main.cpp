@@ -99,7 +99,7 @@ void loop()
 
 	// In "match" mode, copy from outputs to the missed opportunities
 	// This is basically the same as the straight normalization from before
-	if (MISMATCH_in == 0) {
+	if (MISMATCH_in == 1) {
 		for (int i = 0; i < NUM_CHANNELS - 1; i++) {
 			MISSED_opportunities[i] = CV_out[i];
 		}
