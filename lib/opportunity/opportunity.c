@@ -63,6 +63,12 @@ void OP_destroy(opportunity_t *self)
     free(self->probability);
 }
 
+void OP_set_seed(opportunity_t *self, unsigned int random_seed)
+{
+	self->random_seed = random_seed;
+	_reset_random_sequence(self, random_seed, false);
+}
+
 void OP_set_mock_random(opportunity_t *self, bool doMock)
 {
     for (int i = 0; i < self->num_channels; i++)
@@ -144,6 +150,7 @@ void OP_process(opportunity_t *self,
                 uint16_t *missed_opportunities,
                 uint16_t msec)
 {
+
     // Process reset input
     _OP_process_reset(self, reset);
 

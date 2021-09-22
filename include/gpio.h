@@ -19,6 +19,7 @@ typedef struct GPIO
 {
     pin_t IN[NUM_CHANNELS];
     pin_t OUT[NUM_CHANNELS];
+	pin_t RESEED;
     pin_t RESET;
     pin_t DENSITY;
     pin_t PULSE_OUT;
@@ -48,6 +49,7 @@ GPIO_t GPIO_init(void)
     GPIO_t self = {
         {A5, A0, A1, A2}, // CV Ins -- AD5, AD0, AD1, AD2
         {4, 12, 10, 8},     // CV Outs -- PD4, PB4, PB2, PB0
+		A7,				  // Reseed In -- AD6
         A3,               // Reset In -- AD3
         A4,               // Density In -- AD4
         3,                // Pulse out -- PD3
@@ -62,6 +64,7 @@ GPIO_t GPIO_init(void)
         pinMode(self.OUT[i], OUTPUT);
     }
 
+	pinMode(self.RESEED, INPUT);
     pinMode(self.RESET, INPUT);
     pinMode(self.DENSITY, INPUT);
     pinMode(self.PULSE_OUT, OUTPUT);
@@ -84,12 +87,13 @@ GPIO_t GPIO_init(void)
 /**
  * Reads incoming data from all inputs
  */
-void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reset, uint16_t *density, uint16_t *mismatch)
+void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, uint16_t *density, uint16_t *mismatch)
 {
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
         in[i] = analogRead(self->IN[i]);
     }
+	*reseed = analogRead(self->RESEED);
     *reset = analogRead(self->RESET);
     *density = analogRead(self->DENSITY);
 	*mismatch = digitalRead(self->MISMATCH);

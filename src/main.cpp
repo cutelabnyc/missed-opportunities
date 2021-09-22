@@ -22,24 +22,30 @@ buffer_t CV_in[NUM_CHANNELS];
 buffer_t CV_out[NUM_CHANNELS];
 buffer_t MISSED_opportunities[NUM_CHANNELS - 1];
 
+uint16_t RESEED_in;
 uint16_t RESET_in;
 uint16_t DENSITY_in;
 uint16_t MISMATCH_in;
 uint16_t AUTOPULSE_out;
+uint16_t last_reseed = 0;
+uint16_t random_counter = 0;
+uint16_t original_seed;
 
 uint16_t lastMsec = 0;
+
 
 static unsigned int makeRandomSeed()
 {
   unsigned int out = 0;
   buffer_t in[NUM_CHANNELS];
+  uint16_t reseed;
   uint16_t reset;
   uint16_t density;
   uint16_t mismatch;
   unsigned int readBits = 0;
   while (readBits < CHAR_BIT * sizeof(unsigned int))
   {
-    GPIO_read(&GPIO, in, &reset, &density, &mismatch);
+    GPIO_read(&GPIO, in, &reseed, &reset, &density, &mismatch);
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
       out = out << 1;
@@ -62,14 +68,14 @@ void setup()
 
   Serial.begin(9600);
 
-  unsigned int random_seed = makeRandomSeed();
+  original_seed = makeRandomSeed();
 
   OP_init(&opportunity,
           NUM_CHANNELS,
           V_MAX,
-		      V_CUTOFF,
+				V_CUTOFF,
           HYSTERESIS,
-          random_seed);
+          original_seed);
 }
 
 /**
@@ -82,11 +88,18 @@ void setup()
  */
 void loop()
 {
-  GPIO_read(&GPIO, CV_in, &RESET_in, &DENSITY_in, &MISMATCH_in);
+  GPIO_read(&GPIO, CV_in, &RESEED_in, &RESET_in, &DENSITY_in, &MISMATCH_in);
 
   uint16_t time = millis();
   uint16_t msec = time - lastMsec;
   lastMsec = time;
+  uint16_t reseed = RESEED_in < 100;
+  if (!last_reseed && reseed) {
+	  random_counter++;
+	  OP_set_seed(&opportunity, original_seed + random_counter * 69 + time);
+  }
+  last_reseed = reseed;
+
 
   OP_process(&opportunity,
              CV_in,

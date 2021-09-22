@@ -62,6 +62,13 @@ void OP_init(opportunity_t *self,
 void OP_destroy(opportunity_t *self);
 
 /**
+ * Set a new random seed
+ *
+ * seed - the new random seed
+ */
+void OP_set_seed(opportunity_t *self, unsigned int random_seed);
+
+/**
  * Enable or disable mock randomization. Used for testing.
  *
  * doMock - Set true to enable mock randomization
