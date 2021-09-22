@@ -49,7 +49,7 @@ GPIO_t GPIO_init(void)
     GPIO_t self = {
         {A5, A0, A1, A2}, // CV Ins -- AD5, AD0, AD1, AD2
         {4, 12, 10, 8},     // CV Outs -- PD4, PB4, PB2, PB0
-		A7,				  // Reseed In -- AD6
+		2,				  // Reseed In -- PD2
         A3,               // Reset In -- AD3
         A4,               // Density In -- AD4
         3,                // Pulse out -- PD3
@@ -64,7 +64,7 @@ GPIO_t GPIO_init(void)
         pinMode(self.OUT[i], OUTPUT);
     }
 
-	pinMode(self.RESEED, INPUT);
+	pinMode(self.RESEED, INPUT_PULLUP);
     pinMode(self.RESET, INPUT);
     pinMode(self.DENSITY, INPUT);
     pinMode(self.PULSE_OUT, OUTPUT);
@@ -93,7 +93,7 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, ui
     {
         in[i] = analogRead(self->IN[i]);
     }
-	*reseed = analogRead(self->RESEED);
+	*reseed = digitalRead(self->RESEED);
     *reset = analogRead(self->RESET);
     *density = analogRead(self->DENSITY);
 	*mismatch = digitalRead(self->MISMATCH);
