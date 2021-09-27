@@ -93,7 +93,7 @@ void loop()
   uint16_t time = millis();
   uint16_t msec = time - lastMsec;
   lastMsec = time;
-  uint16_t reseed = RESEED_in == LOW;
+  uint16_t reseed = RESEED_in == HIGH;
   if (!last_reseed && reseed) {
 	  random_counter++;
 	  OP_set_seed(&opportunity, original_seed + random_counter * 69 + time);
