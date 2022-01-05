@@ -20,6 +20,18 @@ In the `missed-opportunities` project directory, install the external libraries
 pio lib install
 ```
 
+## Production Usage
+
+Make sure the Pocket Programmer is connected
+```
+avrdude -c usbtiny -p t84
+```
+
+Upload the code using the Pocket Programmer
+```
+pio run -t upload -e avr-pocket
+```
+
 ## Development
 
 After creating a feature branch and making your changes, you can build locally without the board plugged in to make sure the code can compile. There are two building environments specified in `platform.ini`:
