@@ -33,6 +33,8 @@ uint16_t original_seed;
 
 uint16_t lastMsec = 0;
 
+float time_dilation = 2.5;
+
 
 static unsigned int makeRandomSeed()
 {
@@ -91,7 +93,7 @@ void loop()
   GPIO_read(&GPIO, CV_in, &RESEED_in, &RESET_in, &DENSITY_in, &MISMATCH_in);
 
   uint16_t time = millis();
-  uint16_t msec = time - lastMsec;
+  uint16_t msec = (time - lastMsec) * time_dilation;
   lastMsec = time;
   uint16_t reseed = RESEED_in == HIGH;
   if (!last_reseed && reseed) {

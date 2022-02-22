@@ -27,6 +27,8 @@ typedef struct GPIO
 	pin_t MISMATCH;
     pin_t MISSED_OPPORTUNITIES[NUM_CHANNELS - 1];
 
+    int densityReadSequence;
+
 } GPIO_t;
 
 /**
@@ -55,7 +57,9 @@ GPIO_t GPIO_init(void)
         3,                // Pulse out -- PD3
         {6, 5},           // Reset and Density LEDs (respectively) -- PD6, PD5,
 		7,				  // PD7 used to set miss/match
-        {13, 11, 9}       // "Missed" Opportunities —- PB5, PB3, PB1
+        {13, 11, 9},      // "Missed" Opportunities —- PB5, PB3, PB1
+
+        0                 // Only read density every other clock
     };
 
     for (int i = 0; i < NUM_CHANNELS; i++)
@@ -91,11 +95,14 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, ui
 {
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
-        in[i] = analogRead(self->IN[i]);
+        in[i] = digitalRead(self->IN[i]);
     }
 	*reseed = digitalRead(self->RESEED);
-    *reset = analogRead(self->RESET);
-    *density = analogRead(self->DENSITY);
+    *reset = digitalRead(self->RESET) * 1024;
+    if (self->densityReadSequence++ == 2) {
+        *density = analogRead(self->DENSITY);
+        self->densityReadSequence = 0;
+    }
 	*mismatch = digitalRead(self->MISMATCH);
 
 	// *reset = 0;
