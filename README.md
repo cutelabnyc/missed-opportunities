@@ -58,3 +58,29 @@ pio run --target upload --target monitor
 ```
 
 After pull requesting, Travis CI will make sure that the code is able to compile and perform integration testing in order to make sure everything is squeaky clean before merging
+
+## Clock Settings
+
+### Atmega328P
+
+Internal crystal: 
+  -Ulfuse:w:0xe2:m
+  -Uhfuse:w:0xd9:m
+  -Uefuse:w:0xf3:m
+
+External crystal: (up to 20MHz)
+  -Ulfuse:w:0xff:m
+  -Uhfuse:w:0xd9:m
+  -Uefuse:w:0xff:m
+
+### Atmega328PB
+
+Internal crystal: 
+  -Ulfuse:w:0xe2:m
+  -Uhfuse:w:0xd9:m
+  -Uefuse:w:0xf7:m
+
+External crystal: (up to 16MHz)
+  -Ulfuse:w:0xff:m
+  -Uhfuse:w:0xd9:m
+  -Uefuse:w:0xf7:m

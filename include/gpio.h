@@ -95,7 +95,7 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, ui
 {
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
-        in[i] = digitalRead(self->IN[i]);
+        in[i] = digitalRead(self->IN[i]) * 1024;
     }
 	*reseed = digitalRead(self->RESEED);
     *reset = digitalRead(self->RESET) * 1024;
@@ -140,6 +140,9 @@ void GPIO_write(GPIO_t *self, uint16_t *out, uint16_t *pulse_out, uint16_t* miss
         }
     }
 
+    // static bool po = false;
+    // po != po;
+	// digitalWrite(self->PULSE_OUT, po ? 255 : 0);
     digitalWrite(self->PULSE_OUT, *pulse_out);
-	// digitalWrite(self->PULSE_OUT, 255);
+    // digitalWrite(self->PULSE_OUT, HIGH);
 }
