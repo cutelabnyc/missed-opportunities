@@ -33,7 +33,7 @@ uint16_t original_seed;
 
 uint16_t lastMsec = 0;
 
-float time_dilation = 1.;
+float time_dilation = SPEEDUP;
 
 
 static unsigned int makeRandomSeed()
