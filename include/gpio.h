@@ -95,10 +95,18 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, ui
 {
     for (int i = 0; i < NUM_CHANNELS; i++)
     {
+        #ifdef ANALOG_READ
+        in[i] = analogRead(self->IN[i]);
+        #else
         in[i] = digitalRead(self->IN[i]) * 1024;
+        #endif
     }
 	*reseed = digitalRead(self->RESEED);
+    #ifdef ANALOG_READ
+    *reset = analogRead(self->RESET);
+    #else
     *reset = digitalRead(self->RESET) * 1024;
+    #endif
     if (self->densityReadSequence++ == 2) {
         *density = analogRead(self->DENSITY);
         self->densityReadSequence = 0;
