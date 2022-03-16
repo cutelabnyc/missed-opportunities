@@ -117,9 +117,10 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, ui
 	// *density = 768;
 	// *mismatch = 0; // assume this is match mode
 
-    // TODO: LEDs are read directly from function
-    // scope variables, should be something different :(
-    analogWrite(self->LEDS[0], *reset / 4);
+    // Reset should appear to be binary, even though it's reading an analog value
+    analogWrite(self->LEDS[0], *reset > V_CUTOFF ? 200 : 0);
+    // analogWrite(self->LEDS[0], *reset / 4);
+    // analogWrite(self->LEDS[0], 255);
 
 	// analogWrite(self->LEDS[0], *mismatch ? 255 : 0);
     // analogWrite(self->LEDS[1], *density / 32);
