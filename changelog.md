@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - _cutesynth low memory_ using the low memory version of the code required changes to the spec
+- _reset LED_ binary output instead of PWM output proportional to the analogRead value of the reset input
 
 ## [1.1.0] - 2022-03-04
 ### Added
