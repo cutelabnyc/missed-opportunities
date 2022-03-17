@@ -10,7 +10,7 @@
 #include "globals.h"
 #include <Arduino.h>
 
-typedef uint8_t pin_t;
+typedef char pin_t;
 
 /**
  * Struct representing the entire IO for the module
@@ -27,9 +27,53 @@ typedef struct GPIO
 	pin_t MISMATCH;
     pin_t MISSED_OPPORTUNITIES[NUM_CHANNELS - 1];
 
-    int densityReadSequence;
+    char densityReadSequence;
 
 } GPIO_t;
+
+#if (NUM_CHANNELS == 4)
+GPIO_t self = {
+    {A5, A0, A1, A2}, // CV Ins -- AD5, AD0, AD1, AD2
+    {4, 12, 10, 8},     // CV Outs -- PD4, PB4, PB2, PB0
+    2,				  // Reseed In -- PD2
+    A3,               // Reset In -- AD3
+    A4,               // Density In -- AD4
+    3,                // Pulse out -- PD3
+    {6, 5},           // Reset and Density LEDs (respectively) -- PD6, PD5,
+    7,				  // PD7 used to set miss/match
+    {13, 11, 9},      // "Missed" Opportunities —- PB5, PB3, PB1
+
+    0                 // Only read density every other clock
+};
+#elif (NUM_CHANNELS == 3)
+GPIO_t self = {
+    {A5, A0, A1}, // CV Ins -- AD5, AD0, AD1, AD2
+    {4, 12, 10},     // CV Outs -- PD4, PB4, PB2, PB0
+    2,				  // Reseed In -- PD2
+    A3,               // Reset In -- AD3
+    A4,               // Density In -- AD4
+    3,                // Pulse out -- PD3
+    {6, 5},           // Reset and Density LEDs (respectively) -- PD6, PD5,
+    7,				  // PD7 used to set miss/match
+    {13, 11},      // "Missed" Opportunities —- PB5, PB3, PB1
+
+    0                 // Only read density every other clock
+};
+#else
+GPIO_t self = {
+    {A5, A0},
+    {4, 12},
+    2,				  // Reseed In -- PD2
+    A3,               // Reset In -- AD3
+    A4,               // Density In -- AD4
+    3,                // Pulse out -- PD3
+    {6, 5},           // Reset and Density LEDs (respectively) -- PD6, PD5,
+    7,				  // PD7 used to set miss/match
+    {13},
+
+    0                 // Only read density every other clock
+};
+#endif
 
 /**
  * Returns the global pin IO struct
@@ -48,21 +92,7 @@ GPIO_t GPIO_init(void)
     };
 	*/
 
-    GPIO_t self = {
-        {A5, A0, A1, A2}, // CV Ins -- AD5, AD0, AD1, AD2
-        {4, 12, 10, 8},     // CV Outs -- PD4, PB4, PB2, PB0
-		2,				  // Reseed In -- PD2
-        A3,               // Reset In -- AD3
-        A4,               // Density In -- AD4
-        3,                // Pulse out -- PD3
-        {6, 5},           // Reset and Density LEDs (respectively) -- PD6, PD5,
-		7,				  // PD7 used to set miss/match
-        {13, 11, 9},      // "Missed" Opportunities —- PB5, PB3, PB1
-
-        0                 // Only read density every other clock
-    };
-
-    for (int i = 0; i < NUM_CHANNELS; i++)
+    for (char i = 0; i < NUM_CHANNELS; i++)
     {
         pinMode(self.IN[i], INPUT);
         pinMode(self.OUT[i], OUTPUT);
@@ -73,14 +103,14 @@ GPIO_t GPIO_init(void)
     pinMode(self.DENSITY, INPUT);
     pinMode(self.PULSE_OUT, OUTPUT);
 
-    for (int i = 0; i < NUM_LEDS; i++)
+    for (char i = 0; i < NUM_LEDS; i++)
     {
         pinMode(self.LEDS[i], OUTPUT);
     }
 
 	pinMode(self.MISMATCH, INPUT);
 
-    for (int i = 0; i < NUM_CHANNELS - 1; i++)
+    for (char i = 0; i < NUM_CHANNELS - 1; i++)
     {
         pinMode(self.MISSED_OPPORTUNITIES[i], OUTPUT);
     }
@@ -91,9 +121,10 @@ GPIO_t GPIO_init(void)
 /**
  * Reads incoming data from all inputs
  */
-void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, uint16_t *density, uint16_t *mismatch)
+void GPIO_read(GPIO_t *self, uint16_t *in, char *reseed, char *reset, uint16_t *density, char *mismatch)
 {
-    for (int i = 0; i < NUM_CHANNELS; i++)
+    uint16_t analogVal;
+    for (char i = 0; i < NUM_CHANNELS; i++)
     {
         #ifdef ANALOG_READ
         in[i] = analogRead(self->IN[i]);
@@ -103,9 +134,10 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, ui
     }
 	*reseed = digitalRead(self->RESEED);
     #ifdef ANALOG_READ
-    *reset = analogRead(self->RESET);
+    analogVal = analogRead(self->RESET);
+    *reset = analogVal > V_CUTOFF;
     #else
-    *reset = digitalRead(self->RESET) * 1024;
+    *reset = digitalRead(self->RESET);
     #endif
     if (self->densityReadSequence++ == 2) {
         *density = analogRead(self->DENSITY);
@@ -118,14 +150,16 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, ui
 	// *mismatch = 0; // assume this is match mode
 
     // Reset should appear to be binary, even though it's reading an analog value
-    analogWrite(self->LEDS[0], *reset > V_CUTOFF ? 200 : 0);
+    analogWrite(self->LEDS[0], *reset ? 200 : 0);
     // analogWrite(self->LEDS[0], *reset / 4);
     // analogWrite(self->LEDS[0], 255);
 
 	// analogWrite(self->LEDS[0], *mismatch ? 255 : 0);
     // analogWrite(self->LEDS[1], *density / 32);
-	double dreg = (*density / 4) / 255.0;
-	analogWrite(self->LEDS[1], (uint16_t) (dreg * dreg * dreg * 255));
+	float dreg = (*density / 4) / 255.0;
+	analogWrite(self->LEDS[1], (uint8_t) (dreg * dreg * dreg * 255));
+    // analogWrite(5, (uint16_t) (dreg * dreg * dreg * 255));
+    // analogWrite(5, *mismatch ? 255 : 0 );
 
     // analogWrite(self->LEDS[0], 255);
     // analogWrite(self->LEDS[1], 255);
@@ -134,9 +168,9 @@ void GPIO_read(GPIO_t *self, uint16_t *in, uint16_t *reseed, uint16_t *reset, ui
 /**
  * Writes data to all outputs
  */
-void GPIO_write(GPIO_t *self, uint16_t *out, uint16_t *pulse_out, uint16_t* missed_opportunities)
+void GPIO_write(GPIO_t *self, bool *out, uint16_t *pulse_out, bool* missed_opportunities)
 {
-    for (int i = 0; i < NUM_CHANNELS; i++)
+    for (char i = 0; i < NUM_CHANNELS; i++)
     {
         // Write the channels
         digitalWrite(self->OUT[i], out[i]);
@@ -146,6 +180,8 @@ void GPIO_write(GPIO_t *self, uint16_t *out, uint16_t *pulse_out, uint16_t* miss
         if(i < NUM_CHANNELS - 1){
             digitalWrite(self->MISSED_OPPORTUNITIES[i], missed_opportunities[i]);
 			// digitalWrite(self->MISSED_OPPORTUNITIES[i], 255);
+            // digitalWrite(13, HIGH);
+            // digitalWrite(self->MISSED_OPPORTUNITIES[0], HIGH);
         }
     }
 

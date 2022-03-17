@@ -16,18 +16,19 @@ extern "C"
 }
 
 opportunity_t opportunity;
+channel_t channels[NUM_CHANNELS];
 GPIO_t GPIO;
 
-buffer_t CV_in[NUM_CHANNELS];
-buffer_t CV_out[NUM_CHANNELS];
-buffer_t MISSED_opportunities[NUM_CHANNELS - 1];
+buffer_t GATE_in[NUM_CHANNELS];
+bool GATE_out[NUM_CHANNELS];
+bool MISSED_opportunities[NUM_CHANNELS - 1];
 
-uint16_t RESEED_in;
-uint16_t RESET_in;
+char RESEED_in;
+char RESET_in;
 uint16_t DENSITY_in;
-uint16_t MISMATCH_in;
+char MISMATCH_in;
 uint16_t AUTOPULSE_out;
-uint16_t last_reseed = 0;
+char last_reseed = 0;
 uint16_t random_counter = 0;
 uint16_t original_seed;
 
@@ -40,15 +41,15 @@ static unsigned int makeRandomSeed()
 {
   unsigned int out = 0;
   buffer_t in[NUM_CHANNELS];
-  uint16_t reseed;
-  uint16_t reset;
+  char reseed;
+  char reset;
   uint16_t density;
-  uint16_t mismatch;
+  char mismatch;
   unsigned int readBits = 0;
   while (readBits < CHAR_BIT * sizeof(unsigned int))
   {
     GPIO_read(&GPIO, in, &reseed, &reset, &density, &mismatch);
-    for (int i = 0; i < NUM_CHANNELS; i++)
+    for (char i = 0; i < NUM_CHANNELS; i++)
     {
       out = out << 1;
       out = out | (in[i] & 1);
@@ -68,14 +69,15 @@ void setup()
 {
   GPIO = GPIO_init();
 
-  Serial.begin(9600);
+  // Serial.begin(9600);
 
   original_seed = makeRandomSeed();
 
   OP_init(&opportunity,
+          channels,
           NUM_CHANNELS,
           V_MAX,
-				V_CUTOFF,
+				  V_CUTOFF,
           HYSTERESIS,
           original_seed);
 }
@@ -90,35 +92,34 @@ void setup()
  */
 void loop()
 {
-  GPIO_read(&GPIO, CV_in, &RESEED_in, &RESET_in, &DENSITY_in, &MISMATCH_in);
+  GPIO_read(&GPIO, GATE_in, &RESEED_in, &RESET_in, &DENSITY_in, &MISMATCH_in);
 
   uint16_t time = millis();
   uint16_t msec = (time - lastMsec) * time_dilation;
   lastMsec = time;
-  uint16_t reseed = RESEED_in == HIGH;
+  bool reseed = RESEED_in == HIGH;
   if (!last_reseed && reseed) {
 	  random_counter++;
 	  OP_set_seed(&opportunity, original_seed + random_counter * 69 + time);
   }
   last_reseed = reseed;
 
-
   OP_process(&opportunity,
-             CV_in,
-             CV_out,
-             &RESET_in,
+             GATE_in,
+             GATE_out,
+             RESET_in > 0,
              &DENSITY_in,
              &AUTOPULSE_out,
              MISSED_opportunities,
-             msec);
+             (char) msec);
 
 	// In "match" mode, copy from outputs to the missed opportunities
 	// This is basically the same as the straight normalization from before
 	if (MISMATCH_in == 1) {
-		for (int i = 0; i < NUM_CHANNELS - 1; i++) {
-			MISSED_opportunities[i] = CV_out[i];
+		for (char i = 0; i < NUM_CHANNELS - 1; i++) {
+			MISSED_opportunities[i] = GATE_out[i];
 		}
 	}
 
-  GPIO_write(&GPIO, CV_out, &AUTOPULSE_out, MISSED_opportunities);
+  GPIO_write(&GPIO, GATE_out, &AUTOPULSE_out, MISSED_opportunities);
 }
