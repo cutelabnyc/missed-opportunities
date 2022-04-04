@@ -12,6 +12,12 @@
 
 typedef char pin_t;
 
+static uint8_t b_register;
+#ifndef ANALOG_READ
+static uint8_t c_register;
+#endif
+static uint8_t d_register;
+
 /**
  * Struct representing the entire IO for the module
  */
@@ -79,7 +85,7 @@ GPIO_t self = {
  * Returns the global pin IO struct
  */
 GPIO_t GPIO_init(void)
-{
+{    
 	/** Old configuration
     GPIO_t self = {
         {A4, A5, A2, A3}, // CV Ins -- AD4, AD5, AD2, AD3
@@ -124,26 +130,37 @@ GPIO_t GPIO_init(void)
 void GPIO_read(GPIO_t *self, uint16_t *in, char *reseed, char *reset, uint16_t *density, char *mismatch)
 {
     uint16_t analogVal;
-    for (char i = 0; i < NUM_CHANNELS; i++)
-    {
-        #ifdef ANALOG_READ
-        in[i] = analogRead(self->IN[i]);
-        #else
-        in[i] = digitalRead(self->IN[i]) * 1024;
-        #endif
-    }
-	*reseed = digitalRead(self->RESEED);
+    b_register = PINB;
+    #ifndef ANALOG_READ
+    c_register = PINC;
+    #endif
+    d_register = PIND;
+
+    #ifdef ANALOG_READ
+        for (char i = 0; i < NUM_CHANNELS; i++)
+        {
+            in[i] = analogRead(self->IN[i]);
+        }
+    #else
+        c_register = PINC;
+        for (char i = 0; i < NUM_CHANNELS; i++) {
+            in[i] = (c_register & digitalPinToBitMask(self->in[i])) ? 1024 : 0;
+        }
+    #endif
+
+    *reseed = (d_register & digitalPinToBitMask(self->RESEED)) ? HIGH : LOW;
+
     #ifdef ANALOG_READ
     analogVal = analogRead(self->RESET);
     *reset = analogVal > V_CUTOFF;
     #else
-    *reset = digitalRead(self->RESET);
+    *reset = (c_register & digitalPinToBitMask(self->RESET));
     #endif
     if (self->densityReadSequence++ == 2) {
         *density = analogRead(self->DENSITY);
         self->densityReadSequence = 0;
     }
-	*mismatch = digitalRead(self->MISMATCH);
+    *mismatch = (d_register & digitalPinToBitMask(self->MISMATCH)) ? HIGH : LOW;
 
 	// *reset = 0;
 	// *density = 768;
@@ -165,6 +182,17 @@ void GPIO_read(GPIO_t *self, uint16_t *in, char *reseed, char *reset, uint16_t *
     // analogWrite(self->LEDS[1], 255);
 }
 
+#define __fastwrite(pin, val) \
+(pin < 8) ? \
+    (val ? \
+        PORTD |= digitalPinToBitMask(pin) : \
+        PORTD &= ~digitalPinToBitMask(pin) \
+    ) : \
+    (val ? \
+        PORTB |= digitalPinToBitMask(pin) : \
+        PORTB &= ~digitalPinToBitMask(pin) \
+    )
+
 /**
  * Writes data to all outputs
  */
@@ -172,7 +200,30 @@ void GPIO_write(GPIO_t *self, bool *out, uint16_t *pulse_out, bool* missed_oppor
 {
     for (char i = 0; i < NUM_CHANNELS; i++)
     {
-        // Write the channels
+        __fastwrite(self->OUT[i], out[i]);
+		// digitalWrite(self->OUT[i], 255);
+
+        // Write the Missed Opportunities
+        if(i < NUM_CHANNELS - 1){
+            __fastwrite(self->MISSED_OPPORTUNITIES[i], missed_opportunities[i]);
+			// digitalWrite(self->MISSED_OPPORTUNITIES[i], 255);
+            // digitalWrite(13, HIGH);
+            // digitalWrite(self->MISSED_OPPORTUNITIES[0], HIGH);
+        }
+    }
+
+    // static bool po = false;
+    // po != po;
+	// digitalWrite(self->PULSE_OUT, po ? 255 : 0);
+    __fastwrite(self->PULSE_OUT, *pulse_out);
+    // digitalWrite(self->PULSE_OUT, HIGH);
+}
+
+#if 0
+void GPIO_write_slow(GPIO_t *self, bool *out, uint16_t *pulse_out, bool* missed_opportunities)
+{
+    for (char i = 0; i < NUM_CHANNELS; i++)
+    {
         digitalWrite(self->OUT[i], out[i]);
 		// digitalWrite(self->OUT[i], 255);
 
@@ -191,3 +242,4 @@ void GPIO_write(GPIO_t *self, bool *out, uint16_t *pulse_out, bool* missed_oppor
     digitalWrite(self->PULSE_OUT, *pulse_out);
     // digitalWrite(self->PULSE_OUT, HIGH);
 }
+#endif
