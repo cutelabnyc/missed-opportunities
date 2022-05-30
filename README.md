@@ -29,7 +29,7 @@ avrdude -c usbtiny -p t84
 
 Upload the code using the Pocket Programmer
 ```
-pio run -t upload -e avr-pocket
+pio run -t upload -e avr-328pb # or avr-168pa depending on chip
 ```
 
 ## Development
